@@ -1,0 +1,85 @@
+{
+  "factors": [
+    {
+      "name": "Real GDP",
+      "source_column": "Real GDP level (index)"
+    },
+    {
+      "name": "Unemployment",
+      "source_column": "Unemployment rate"
+    },
+    {
+      "name": "US Inflation",
+      "source_column": "CPI inflation rate"
+    },
+    {
+      "name": "US Equities",
+      "source_column": "Dow Jones Total Stock Market Index (Level)"
+    },
+    {
+      "name": "VIX",
+      "source_column": "Market Volatility Index (Level)"
+    },
+    {
+      "name": "3M Treasury",
+      "source_column": "3-month Treasury rate"
+    },
+    {
+      "name": "5Y Treasury",
+      "source_column": "5-year Treasury yield"
+    },
+    {
+      "name": "10Y Treasury",
+      "source_column": "10-year Treasury yield"
+    },
+    {
+      "name": "Mortgage Spread",
+      "source_column": "Mortgage-10Y spread"
+    },
+    {
+      "name": "BBB Corp Spread",
+      "source_column": "BBB-10Y spread"
+    },
+    {
+      "name": "US HPI",
+      "source_column": "House Price Index (Level)"
+    },
+    {
+      "name": "US CRE",
+      "source_column": "Commercial Real Estate Price Index (Level)"
+    },
+    {
+      "name": "Dev. Asia GDP",
+      "source_column": "Developing Asia real GDP growth"
+    },
+    {
+      "name": "UK GDP",
+      "source_column": "U.K. real GDP growth"
+    },
+    {
+      "name": "Eurozone GDP",
+      "source_column": "Euro area real GDP growth"
+    },
+    {
+      "name": "Japan GDP",
+      "source_column": "Japan real GDP growth"
+    },
+    {
+      "name": "USD/EUR",
+      "source_column": "Euro area bilateral dollar exchange rate (USD/euro)"
+    },
+    {
+      "name": "USD/GBP",
+      "source_column": "U.K. bilateral dollar exchange rate (USD/pound)"
+    },
+    {
+      "name": "JPY/USD",
+      "source_column": "Japan bilateral dollar exchange rate (yen/USD)"
+    },
+    {
+      "name": "D.A./USD",
+      "source_column": "Developing Asia bilateral dollar exchange rate (F/USD, index)"
+    }
+  ]
+}
+
