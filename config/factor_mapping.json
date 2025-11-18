@@ -50,19 +50,19 @@
     },
     {
       "name": "Dev. Asia GDP",
-      "source_column": "Developing Asia real GDP growth"
+      "source_column": "Developing Asia GDP level (index)"
     },
     {
       "name": "UK GDP",
-      "source_column": "U.K. real GDP growth"
+      "source_column": "U.K. GDP level (index)"
     },
     {
       "name": "Eurozone GDP",
-      "source_column": "Euro area real GDP growth"
+      "source_column": "Euro area GDP level (index)"
     },
     {
       "name": "Japan GDP",
-      "source_column": "Japan real GDP growth"
+      "source_column": "Japan GDP level (index)"
     },
     {
       "name": "USD/EUR",

@@ -135,73 +135,52 @@ CALCULATORS: Dict[str, Callable[..., Dict[str, Any]]] = {
 }
 
 
-def format_number(value: float, precision: int | None = None, show_sign: bool = False) -> str:
+def resolve_source(values: Dict[str, Any], source: str) -> Any:
+    target: Any = values
+    for part in source.split("."):
+        if isinstance(target, dict):
+            target = target.get(part)
+        else:
+            target = None
+        if target is None:
+            break
+    return target
+
+
+def build_field_value(values: Dict[str, Any], spec: Dict[str, Any]) -> str:
+    source = spec.get("source", spec.get("name"))
+    raw = resolve_source(values, source)
+    if raw is None:
+        return ""
+    if isinstance(raw, dict):
+        raise ValueError(f"Field '{spec.get('name')}' cannot map to a dictionary without a subkey.")
+    value = float(raw) * spec.get("scale", 1)
+    precision = spec.get("precision")
+    show_sign = spec.get("show_sign", False)
+
     fmt = "{:"
-    fmt += "+" if show_sign else ""
+    if show_sign:
+        fmt += "+"
     if precision is not None:
         fmt += f".{precision}f"
     fmt += "}"
-    return fmt.format(value)
 
-
-def format_percent(values: Dict[str, Any], cfg: Dict[str, Any]) -> str:
-    source = cfg.get("source", "shock")
-    value = values["shock_value"] if source == "shock" else values["extreme_value"]
-    precision = cfg.get("precision", 1)
-    text = format_number(value, precision, cfg.get("show_sign", False))
-    return f"{text}%"
-
-
-def format_range_percent(values: Dict[str, Any], cfg: Dict[str, Any]) -> str:
-    source = cfg.get("source", "extreme")
-    payload = values["shock_value"] if source == "shock" else values["extreme_value"]
-    if not isinstance(payload, dict):
-        raise ValueError("Range percent formatter requires dict payload.")
-    hi = max(payload.get("min"), payload.get("max"))
-    lo = min(payload.get("min"), payload.get("max"))
-    precision = cfg.get("precision", 1)
-    hi_str = format_number(hi, precision, cfg.get("show_sign", False))
-    lo_str = format_number(lo, precision, cfg.get("show_sign", False))
-    order = cfg.get("order", "desc")
-    first, second = (hi_str, lo_str) if order == "desc" else (lo_str, hi_str)
-    return f"{first}% to {second}%"
-
-
-def format_level_delta(values: Dict[str, Any], cfg: Dict[str, Any]) -> str:
-    level_value = values["extreme_value"]
-    level_precision = cfg.get("level_precision")
-    level_unit = cfg.get("level_unit", "")
-    level_show_sign = cfg.get("level_show_sign", False)
-    level_text = format_number(level_value, level_precision, level_show_sign) + level_unit
-
-    label = cfg.get("label")
-    label_position = cfg.get("label_position", "after")
-    if label:
-        level_text = f"{label} {level_text}" if label_position == "before" else f"{level_text} {label}"
-
-    delta_value = values["shock_value"] * cfg.get("delta_scale", 1)
-    delta_precision = cfg.get("delta_precision")
-    delta_unit = cfg.get("delta_unit", "")
-    delta_show_sign = cfg.get("delta_show_sign", True)
-    delta_text = format_number(delta_value, delta_precision, delta_show_sign) + delta_unit
-
-    return f"{level_text.strip()} ({delta_text.strip()})"
-
-
-FORMATTERS: Dict[str, Callable[[Dict[str, Any], Dict[str, Any]], str]] = {
-    "percent": format_percent,
-    "range_percent": format_range_percent,
-    "level_delta": format_level_delta,
-}
+    text = fmt.format(value)
+    prefix = spec.get("prefix", "")
+    suffix = spec.get("suffix", "")
+    return f"{prefix}{text}{suffix}"
 
 
 def format_output(cfg: Dict[str, Any] | None, values: Dict[str, Any]) -> str | None:
     if not cfg:
         return None
-    formatter = FORMATTERS.get(cfg.get("type"))
-    if not formatter:
+    template = cfg.get("template")
+    if not template:
         return None
-    return formatter(values, cfg)
+    context: Dict[str, str] = {}
+    for field_spec in cfg.get("fields", []):
+        context[field_spec["name"]] = build_field_value(values, field_spec)
+    return template.format(**context)
 
 
 def compute_factor_result(

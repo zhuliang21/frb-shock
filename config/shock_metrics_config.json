@@ -5,10 +5,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false,
-        "source": "shock"
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -16,13 +16,11 @@
       "extreme": "max",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "max",
-        "level_unit": "%",
-        "level_precision": 0,
-        "delta_precision": 1,
-        "delta_unit": " ppts",
-        "delta_show_sign": true
+        "template": "{extreme_pct}% max\n({delta_ppts} ppts)",
+        "fields": [
+          { "name": "extreme_pct", "source": "extreme_value", "precision": 0 },
+          { "name": "delta_ppts", "source": "shock_value", "precision": 1, "show_sign": true }
+        ]
       }
     },
     {
@@ -30,8 +28,11 @@
       "extreme": "range",
       "shock_method": "rate_range",
       "output": {
-        "type": "range_percent",
-        "precision": 1
+        "template": "{high}% to {low}%",
+        "fields": [
+          { "name": "high", "source": "shock_value.max", "precision": 1 },
+          { "name": "low", "source": "shock_value.min", "precision": 1 }
+        ]
       }
     },
     {
@@ -39,9 +40,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -49,12 +51,11 @@
       "extreme": "max",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "peak",
-        "level_precision": 0,
-        "delta_precision": 0,
-        "delta_unit": " pts",
-        "delta_show_sign": true
+        "template": "{extreme_level} peak\n({delta_pts} pts)",
+        "fields": [
+          { "name": "extreme_level", "source": "extreme_value", "precision": 0 },
+          { "name": "delta_pts", "source": "shock_value", "precision": 0, "show_sign": true }
+        ]
       }
     },
     {
@@ -62,14 +63,11 @@
       "extreme": "min",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "trough",
-        "level_unit": "%",
-        "level_precision": 1,
-        "delta_precision": 0,
-        "delta_unit": " bps",
-        "delta_scale": 100,
-        "delta_show_sign": true
+        "template": "{extreme_pct}% trough\n({delta_bps} bps)",
+        "fields": [
+          { "name": "extreme_pct", "source": "extreme_value", "precision": 1 },
+          { "name": "delta_bps", "source": "shock_value", "scale": 100, "precision": 0, "show_sign": true }
+        ]
       }
     },
     {
@@ -77,14 +75,11 @@
       "extreme": "min",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "trough",
-        "level_unit": "%",
-        "level_precision": 1,
-        "delta_precision": 0,
-        "delta_unit": " bps",
-        "delta_scale": 100,
-        "delta_show_sign": true
+        "template": "{extreme_pct}% trough\n({delta_bps} bps)",
+        "fields": [
+          { "name": "extreme_pct", "source": "extreme_value", "precision": 1 },
+          { "name": "delta_bps", "source": "shock_value", "scale": 100, "precision": 0, "show_sign": true }
+        ]
       }
     },
     {
@@ -92,14 +87,11 @@
       "extreme": "min",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "trough",
-        "level_unit": "%",
-        "level_precision": 1,
-        "delta_precision": 0,
-        "delta_unit": " bps",
-        "delta_scale": 100,
-        "delta_show_sign": true
+        "template": "{extreme_pct}% trough\n({delta_bps} bps)",
+        "fields": [
+          { "name": "extreme_pct", "source": "extreme_value", "precision": 1 },
+          { "name": "delta_bps", "source": "shock_value", "scale": 100, "precision": 0, "show_sign": true }
+        ]
       }
     },
     {
@@ -107,14 +99,11 @@
       "extreme": "max",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "peak",
-        "level_unit": "%",
-        "level_precision": 1,
-        "delta_precision": 0,
-        "delta_unit": " bps",
-        "delta_scale": 100,
-        "delta_show_sign": true
+        "template": "{extreme_pct}% peak\n({delta_bps} bps)",
+        "fields": [
+          { "name": "extreme_pct", "source": "extreme_value", "precision": 1 },
+          { "name": "delta_bps", "source": "shock_value", "scale": 100, "precision": 0, "show_sign": true }
+        ]
       }
     },
     {
@@ -122,14 +111,11 @@
       "extreme": "max",
       "shock_method": "level_delta_vs_t0",
       "output": {
-        "type": "level_delta",
-        "label": "peak",
-        "level_unit": "%",
-        "level_precision": 1,
-        "delta_precision": 0,
-        "delta_unit": " bps",
-        "delta_scale": 100,
-        "delta_show_sign": true
+        "template": "{extreme_pct}% peak\n({delta_bps} bps)",
+        "fields": [
+          { "name": "extreme_pct", "source": "extreme_value", "precision": 1 },
+          { "name": "delta_bps", "source": "shock_value", "scale": 100, "precision": 0, "show_sign": true }
+        ]
       }
     },
     {
@@ -137,9 +123,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -147,9 +134,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -157,9 +145,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -167,9 +156,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -177,9 +167,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -187,9 +178,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -197,9 +189,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -207,9 +200,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -217,9 +211,10 @@
       "extreme": "min",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     },
     {
@@ -227,9 +222,10 @@
       "extreme": "max",
       "shock_method": "level_pct_vs_t0",
       "output": {
-        "type": "percent",
-        "precision": 1,
-        "show_sign": false
+        "template": "{shock_pct}%",
+        "fields": [
+          { "name": "shock_pct", "source": "shock_value", "precision": 1 }
+        ]
       }
     }
   ]

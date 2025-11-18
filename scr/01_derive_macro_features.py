@@ -32,6 +32,14 @@ BBB_SPREAD = "BBB-10Y spread"
 MORTGAGE_RATE = "Mortgage rate"
 MORTGAGE_SPREAD = "Mortgage-10Y spread"
 
+GDP_GROWTH_TO_LEVEL = {
+    "Real GDP growth": "Real GDP level (index)",
+    "Developing Asia real GDP growth": "Developing Asia GDP level (index)",
+    "U.K. real GDP growth": "U.K. GDP level (index)",
+    "Euro area real GDP growth": "Euro area GDP level (index)",
+    "Japan real GDP growth": "Japan GDP level (index)",
+}
+
 
 def ensure_inputs() -> None:
     for path in (PATH_SA_SOURCE, T0_JSON_SOURCE):
@@ -51,11 +59,11 @@ def sort_by_date(df: pd.DataFrame) -> pd.DataFrame:
     return df.assign(_order=order).sort_values("_order").drop(columns="_order")
 
 
-def compute_real_gdp_level(df: pd.DataFrame, base_level: float = 100.0) -> pd.Series:
-    levels = []
+def compute_level_from_growth(series: pd.Series, base_level: float = 100.0) -> pd.Series:
+    levels: list[float | pd._libs.missing.NAType] = []
     prev = base_level
 
-    for growth in df[REAL_GDP_GROWTH]:
+    for growth in series:
         rate = pd.to_numeric(growth, errors="coerce")
         if pd.isna(rate):
             levels.append(pd.NA)
@@ -63,7 +71,7 @@ def compute_real_gdp_level(df: pd.DataFrame, base_level: float = 100.0) -> pd.Se
         prev = prev * (1 + rate / 100.0) ** 0.25
         levels.append(prev)
 
-    return pd.Series(levels, index=df.index).round(4)
+    return pd.Series(levels, index=series.index).round(4)
 
 
 def compute_spread(df: pd.DataFrame, numerator: str, denominator: str) -> pd.Series:
@@ -91,11 +99,15 @@ def update_path_sa_source() -> None:
     df = pd.read_csv(PATH_SA_SOURCE)
     df = sort_by_date(df)
 
-    gdp_levels = compute_real_gdp_level(df)
+    for growth_col, level_col in GDP_GROWTH_TO_LEVEL.items():
+        if growth_col not in df.columns:
+            continue
+        level_series = compute_level_from_growth(df[growth_col])
+        df = insert_column_after(df, growth_col, level_col, level_series.round(4))
+
     bbb_spread = compute_spread(df, BBB_YIELD, TEN_YEAR_YIELD)
     mortgage_spread = compute_spread(df, MORTGAGE_RATE, TEN_YEAR_YIELD)
 
-    df = insert_column_after(df, REAL_GDP_GROWTH, REAL_GDP_LEVEL, gdp_levels)
     df = insert_column_after(df, BBB_YIELD, BBB_SPREAD, bbb_spread)
     df = insert_column_after(df, MORTGAGE_RATE, MORTGAGE_SPREAD, mortgage_spread)
 
@@ -123,7 +135,8 @@ def update_t0_source() -> None:
     payload = json.loads(T0_JSON_SOURCE.read_text())
     factors: Dict[str, float] = payload["factors"]
 
-    factors = insert_key_after(factors, REAL_GDP_GROWTH, REAL_GDP_LEVEL, 100.0)
+    for growth_col, level_col in GDP_GROWTH_TO_LEVEL.items():
+        factors = insert_key_after(factors, growth_col, level_col, 100.0)
 
     ten_year = factors.get(TEN_YEAR_YIELD)
     bbb = factors.get(BBB_YIELD)
