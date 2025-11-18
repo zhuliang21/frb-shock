@@ -1,0 +1,236 @@
+{
+  "factors": [
+    {
+      "name": "Real GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false,
+        "source": "shock"
+      }
+    },
+    {
+      "name": "Unemployment",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "max",
+        "level_unit": "%",
+        "level_precision": 0,
+        "delta_precision": 1,
+        "delta_unit": " ppts",
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "US Inflation",
+      "extreme": "range",
+      "shock_method": "rate_range",
+      "output": {
+        "type": "range_percent",
+        "precision": 1
+      }
+    },
+    {
+      "name": "US Equities",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "VIX",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "peak",
+        "level_precision": 0,
+        "delta_precision": 0,
+        "delta_unit": " pts",
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "3M Treasury",
+      "extreme": "min",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "trough",
+        "level_unit": "%",
+        "level_precision": 1,
+        "delta_precision": 0,
+        "delta_unit": " bps",
+        "delta_scale": 100,
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "5Y Treasury",
+      "extreme": "min",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "trough",
+        "level_unit": "%",
+        "level_precision": 1,
+        "delta_precision": 0,
+        "delta_unit": " bps",
+        "delta_scale": 100,
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "10Y Treasury",
+      "extreme": "min",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "trough",
+        "level_unit": "%",
+        "level_precision": 1,
+        "delta_precision": 0,
+        "delta_unit": " bps",
+        "delta_scale": 100,
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "Mortgage Spread",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "peak",
+        "level_unit": "%",
+        "level_precision": 1,
+        "delta_precision": 0,
+        "delta_unit": " bps",
+        "delta_scale": 100,
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "BBB Corp Spread",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0",
+      "output": {
+        "type": "level_delta",
+        "label": "peak",
+        "level_unit": "%",
+        "level_precision": 1,
+        "delta_precision": 0,
+        "delta_unit": " bps",
+        "delta_scale": 100,
+        "delta_show_sign": true
+      }
+    },
+    {
+      "name": "US HPI",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "US CRE",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "Dev. Asia GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "UK GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "Eurozone GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "Japan GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "USD/EUR",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "USD/GBP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "JPY/USD",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    },
+    {
+      "name": "D.A./USD",
+      "extreme": "max",
+      "shock_method": "level_pct_vs_t0",
+      "output": {
+        "type": "percent",
+        "precision": 1,
+        "show_sign": false
+      }
+    }
+  ]
+}
