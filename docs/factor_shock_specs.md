@@ -25,5 +25,5 @@ Source: legacy CCAR shock table (screenshot dated Feb 27, 2025). The table below
 | JPY/USD | `minimum level` | `100 * ((minimum level / T0) - 1)` | |
 | D.A./USD | `maximum level` | `100 * ((maximum level / T0) - 1)` | |
 
-> **Usage**: this reference is intended for validating/authoring the future `shock_metrics_config.json`. Each factor listed here should have one or more metric definitions that replicate the formulas above so the computed shocks match the historical specification. Feel free to extend or correct entries once the mnemonic-to-factor mapping is finalized.
+> **Usage**: this reference is intended for validating/authoring `config/shock_config.json`. Each factor listed here should have one or more metric definitions that replicate the formulas above so the computed shocks match the historical specification. Feel free to extend or correct entries once the mnemonic-to-factor mapping is finalized.
 

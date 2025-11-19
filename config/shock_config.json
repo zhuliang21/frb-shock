@@ -1,0 +1,104 @@
+{
+  "factors": [
+    {
+      "name": "Real GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "Unemployment",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "US Inflation",
+      "extreme": "range",
+      "shock_method": "rate_range"
+    },
+    {
+      "name": "US Equities",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "VIX",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "3M Treasury",
+      "extreme": "min",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "5Y Treasury",
+      "extreme": "min",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "10Y Treasury",
+      "extreme": "min",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "Mortgage Spread",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "BBB Corp Spread",
+      "extreme": "max",
+      "shock_method": "level_delta_vs_t0"
+    },
+    {
+      "name": "US HPI",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "US CRE",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "Dev. Asia GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "UK GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "Eurozone GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "Japan GDP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "USD/EUR",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "USD/GBP",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "JPY/USD",
+      "extreme": "min",
+      "shock_method": "level_pct_vs_t0"
+    },
+    {
+      "name": "D.A./USD",
+      "extreme": "max",
+      "shock_method": "level_pct_vs_t0"
+    }
+  ]
+}

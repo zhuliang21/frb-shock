@@ -4,13 +4,13 @@ Compute shock statistics per factor and export a consolidated JSON payload.
 
 Inputs
 ------
-- config/shock_metrics_config.json : defines calculation method per factor
+- config/shock_config.json : defines calculation method per factor
 - data/intermediate/path_SA.csv    : scenario path (already filtered/renamed)
 - data/intermediate/t0.json        : baseline values
 
 Output
 ------
-- data/intermediate/shock_summary.json : intermediate JSON containing shock
+- data/intermediate/shock_data.json : intermediate JSON containing shock
   values, extreme levels, t0 references, and metadata ready for downstream
   formatting.
 """
@@ -25,11 +25,11 @@ import pandas as pd
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_PATH = PROJECT_ROOT / "config" / "shock_metrics_config.json"
+CONFIG_PATH = PROJECT_ROOT / "config" / "shock_config.json"
 INTERMEDIATE_DIR = PROJECT_ROOT / "data" / "intermediate"
 PATH_SA_CSV = INTERMEDIATE_DIR / "path_SA.csv"
 T0_JSON_PATH = INTERMEDIATE_DIR / "t0.json"
-OUTPUT_PATH = INTERMEDIATE_DIR / "shock_summary.json"
+OUTPUT_PATH = INTERMEDIATE_DIR / "shock_data.json"
 DATE_COLUMN = "Date"
 
 ExtremeKind = Literal["min", "max", "range"]
@@ -39,7 +39,6 @@ class FactorConfig(TypedDict, total=False):
     name: str
     extreme: ExtremeKind
     shock_method: str
-    output: Dict[str, Any]
 
 
 def load_config() -> list[FactorConfig]:
@@ -135,54 +134,6 @@ CALCULATORS: Dict[str, Callable[..., Dict[str, Any]]] = {
 }
 
 
-def resolve_source(values: Dict[str, Any], source: str) -> Any:
-    target: Any = values
-    for part in source.split("."):
-        if isinstance(target, dict):
-            target = target.get(part)
-        else:
-            target = None
-        if target is None:
-            break
-    return target
-
-
-def build_field_value(values: Dict[str, Any], spec: Dict[str, Any]) -> str:
-    source = spec.get("source", spec.get("name"))
-    raw = resolve_source(values, source)
-    if raw is None:
-        return ""
-    if isinstance(raw, dict):
-        raise ValueError(f"Field '{spec.get('name')}' cannot map to a dictionary without a subkey.")
-    value = float(raw) * spec.get("scale", 1)
-    precision = spec.get("precision")
-    show_sign = spec.get("show_sign", False)
-
-    fmt = "{:"
-    if show_sign:
-        fmt += "+"
-    if precision is not None:
-        fmt += f".{precision}f"
-    fmt += "}"
-
-    text = fmt.format(value)
-    prefix = spec.get("prefix", "")
-    suffix = spec.get("suffix", "")
-    return f"{prefix}{text}{suffix}"
-
-
-def format_output(cfg: Dict[str, Any] | None, values: Dict[str, Any]) -> str | None:
-    if not cfg:
-        return None
-    template = cfg.get("template")
-    if not template:
-        return None
-    context: Dict[str, str] = {}
-    for field_spec in cfg.get("fields", []):
-        context[field_spec["name"]] = build_field_value(values, field_spec)
-    return template.format(**context)
-
-
 def compute_factor_result(
     df: pd.DataFrame,
     t0_factors: Dict[str, Any],
@@ -207,9 +158,6 @@ def compute_factor_result(
             extreme=config.get("extreme", "min"),
         )
 
-    formatted = format_output(config.get("output"), calc_result)
-    if formatted:
-        calc_result["formatted"] = formatted
     return calc_result
 
 
