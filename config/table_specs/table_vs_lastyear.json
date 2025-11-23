@@ -1,5 +1,6 @@
 {
-  "output_path": "data/tables/table_vs_lastyear.json",
+  "scenario_name": "CCAR 2025 (Severely Adverse)",
+  "output_path": "data/current/table_vs_lastyear.json",
   "columns": [
     {
       "header": "Factor",
