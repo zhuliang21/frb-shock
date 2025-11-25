@@ -21,6 +21,7 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 INTERMEDIATE_DIR = PROJECT_ROOT / "data" / "intermediate"
 PATH_SA_SOURCE = INTERMEDIATE_DIR / "path_SA_source.csv"
+PATH_BASELINE_SOURCE = INTERMEDIATE_DIR / "path_baseline_source.csv"
 T0_JSON_SOURCE = INTERMEDIATE_DIR / "t0_source.json"
 
 DATE_COLUMN = "Date"
@@ -42,7 +43,7 @@ GDP_GROWTH_TO_LEVEL = {
 
 
 def ensure_inputs() -> None:
-    for path in (PATH_SA_SOURCE, T0_JSON_SOURCE):
+    for path in (PATH_SA_SOURCE, PATH_BASELINE_SOURCE, T0_JSON_SOURCE):
         if not path.exists():
             raise FileNotFoundError(f"Required file missing: {path}")
 
@@ -95,8 +96,8 @@ def insert_column_after(df: pd.DataFrame, anchor: str, column: str, values: Iter
     return df[columns]
 
 
-def update_path_sa_source() -> None:
-    df = pd.read_csv(PATH_SA_SOURCE)
+def update_path_source(csv_path: Path) -> None:
+    df = pd.read_csv(csv_path)
     df = sort_by_date(df)
 
     for growth_col, level_col in GDP_GROWTH_TO_LEVEL.items():
@@ -111,7 +112,7 @@ def update_path_sa_source() -> None:
     df = insert_column_after(df, BBB_YIELD, BBB_SPREAD, bbb_spread)
     df = insert_column_after(df, MORTGAGE_RATE, MORTGAGE_SPREAD, mortgage_spread)
 
-    df.to_csv(PATH_SA_SOURCE, index=False)
+    df.to_csv(csv_path, index=False)
 
 
 def insert_key_after(mapping: Dict[str, float | None], anchor: str, key: str, value: float | None) -> Dict[str, float | None]:
@@ -154,9 +155,10 @@ def update_t0_source() -> None:
 
 def main() -> None:
     ensure_inputs()
-    update_path_sa_source()
+    update_path_source(PATH_SA_SOURCE)
+    update_path_source(PATH_BASELINE_SOURCE)
     update_t0_source()
-    print("Derived macro features saved to path_SA_source.csv and t0_source.json")
+    print("Derived macro features saved to path_SA_source.csv, path_baseline_source.csv, and t0_source.json")
 
 
 if __name__ == "__main__":

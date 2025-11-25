@@ -1,0 +1,63 @@
+{
+  "current_table_path": "data/current/table_vs_lastyear.json",
+  "history_table_path": "data/history/table_vs_lastyear.json",
+  "output_md_path": "artifacts/key_commentary.md",
+  "categories": [
+    {
+      "name": "US real GDP and Unemployment",
+      "factors": [
+        "Real GDP",
+        {
+          "key": "Unemployment",
+          "note": "Counter-cyclicality element in FRB's Scenario Design Framework."
+        }
+      ]
+    },
+    {
+      "name": "Interest Rates",
+      "factors": [
+        "3M Treasury",
+        "5Y Treasury",
+        "10Y Treasury"
+      ]
+    },
+    {
+      "name": "Credit spreads",
+      "factors": [
+        "BBB Corp Spread"
+      ]
+    },
+    {
+      "name": "Equity prices and volatility",
+      "factors": [
+        "US Equities",
+        "VIX"
+      ]
+    },
+    {
+      "name": "Property Prices",
+      "factors": [
+        "US HPI",
+        "US CRE"
+      ]
+    },
+    {
+      "name": "FX Rates",
+      "factors": [
+        "USD/EUR",
+        "USD/GBP",
+        "JPY/USD",
+        "D.A./USD"
+      ]
+    },
+    {
+      "name": "Non-US GDP",
+      "factors": [
+        "UK GDP",
+        "Eurozone GDP",
+        "Japan GDP"
+      ]
+    }
+  ]
+}
+

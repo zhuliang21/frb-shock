@@ -12,8 +12,8 @@ Data-processing pipeline that reads FRB scenario CSVs, normalizes them, derives 
   - `11_build_table_vs_lastyear.py` – build current-year vs prior-year summaries + Excel (`artifacts/table_vs_lastyear.xlsx`).  
   - `12_build_table_vs_history.py` – build multi-year comparison table + Excel (`artifacts/table_vs_history.xlsx`).  
   - `13_build_table_vs_avg_gfc.py` – build CCAR vs Avg vs GFC table with heatmap (`artifacts/table_vs_avg_gfc.xlsx`).  
-  - `21_build_key_commentary.py` – emit Markdown summaries that pair each factor group with a current-vs-prior table (`artifacts/key_commentary.md`).
-- `config/` – mapping and formatting configs (`table_config/` for numeric tables, `md_config/` for Markdown outputs, plus factor/shock mappings).
+  - `14_build_key_commentary.py` – emit Markdown summaries that pair each factor group with a current-vs-prior table (`artifacts/key_commentary.md`).
+- `config/` – mapping and formatting configs, including table specs (scenario names, history paths, styling).
 - `data/`  
   - `source/` – raw FRB CSVs.  
   - `intermediate/` – pipeline outputs (`shock_data.json` is the main feed into the table scripts).  

@@ -36,8 +36,14 @@ SA_FILES = {
     "international": SOURCE_DIR / "2025-Table_3B_Supervisory_Severely_Adverse_International.csv",
 }
 
+BASELINE_FILES = {
+    "domestic": SOURCE_DIR / "2025-Table_2A_Supervisory_Baseline_Domestic.csv",
+    "international": SOURCE_DIR / "2025-Table_2B_Supervisory_Baseline_International.csv",
+}
+
 T0_JSON_PATH = INTERMEDIATE_DIR / "t0_source.json"
 SA_PATH_CSV = INTERMEDIATE_DIR / "path_SA_source.csv"
+BASELINE_PATH_CSV = INTERMEDIATE_DIR / "path_baseline_source.csv"
 
 
 def ensure_intermediate_dir() -> None:
@@ -112,29 +118,31 @@ def _numeric_columns(df: pd.DataFrame, ignore: Iterable[str]) -> pd.DataFrame:
     return df
 
 
-def build_sa_path() -> pd.DataFrame:
-    domestic = pd.read_csv(SA_FILES["domestic"])
-    international = pd.read_csv(SA_FILES["international"])
+def build_scenario_path(file_map: Dict[str, Path]) -> pd.DataFrame:
+    dataframes: list[pd.DataFrame] = []
+    column_order: list[str] = [DATE_COLUMN]
 
-    domestic = sort_by_date(domestic)
-    international = sort_by_date(international)
+    for csv_path in file_map.values():
+        df = pd.read_csv(csv_path)
+        df = sort_by_date(df)
+        df = df.drop(columns=[SCENARIO_COLUMN], errors="ignore")
+        df = _numeric_columns(df, ignore=[DATE_COLUMN])
+        dataframes.append(df)
 
-    domestic = domestic.drop(columns=[SCENARIO_COLUMN], errors="ignore")
-    international = international.drop(columns=[SCENARIO_COLUMN], errors="ignore")
+        for col in df.columns:
+            if col == DATE_COLUMN or col in column_order:
+                continue
+            column_order.append(col)
 
-    domestic = _numeric_columns(domestic, ignore=[DATE_COLUMN])
-    international = _numeric_columns(international, ignore=[DATE_COLUMN])
+    if not dataframes:
+        raise ValueError("No scenario files were provided.")
 
-    merged = pd.merge(domestic, international, on=DATE_COLUMN, how="outer", sort=False)
+    merged = dataframes[0]
+    for df in dataframes[1:]:
+        merged = pd.merge(merged, df, on=DATE_COLUMN, how="outer", sort=False)
+
     merged = sort_by_date(merged)
-
-    ordered_columns: list[str] = [DATE_COLUMN]
-    for col in list(domestic.columns) + list(international.columns):
-        if col == DATE_COLUMN or col in ordered_columns:
-            continue
-        ordered_columns.append(col)
-
-    return merged[ordered_columns]
+    return merged[column_order]
 
 
 def main() -> None:
@@ -143,11 +151,15 @@ def main() -> None:
     t0_payload = build_t0_payload()
     T0_JSON_PATH.write_text(json.dumps(t0_payload, indent=2))
 
-    sa_path_df = build_sa_path()
+    sa_path_df = build_scenario_path(SA_FILES)
     sa_path_df.to_csv(SA_PATH_CSV, index=False)
+
+    baseline_path_df = build_scenario_path(BASELINE_FILES)
+    baseline_path_df.to_csv(BASELINE_PATH_CSV, index=False)
 
     print(f"Saved t0 json -> {T0_JSON_PATH}")
     print(f"Saved SA path csv -> {SA_PATH_CSV}")
+    print(f"Saved Baseline path csv -> {BASELINE_PATH_CSV}")
 
 
 if __name__ == "__main__":

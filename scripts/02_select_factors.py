@@ -22,6 +22,8 @@ CONFIG_PATH = PROJECT_ROOT / "config" / "factor_mapping.json"
 INTERMEDIATE_DIR = PROJECT_ROOT / "data" / "intermediate"
 PATH_SA_SOURCE = INTERMEDIATE_DIR / "path_SA_source.csv"
 PATH_SA_OUTPUT = INTERMEDIATE_DIR / "path_SA.csv"
+PATH_BASELINE_SOURCE = INTERMEDIATE_DIR / "path_baseline_source.csv"
+PATH_BASELINE_OUTPUT = INTERMEDIATE_DIR / "path_baseline.csv"
 T0_SOURCE = INTERMEDIATE_DIR / "t0_source.json"
 T0_OUTPUT = INTERMEDIATE_DIR / "t0.json"
 
@@ -39,17 +41,17 @@ def load_mapping() -> List[Tuple[str, str]]:
     return pairs
 
 
-def select_from_path(mapping: List[Tuple[str, str]]) -> None:
-    df = pd.read_csv(PATH_SA_SOURCE)
+def select_from_path(mapping: List[Tuple[str, str]], input_path: Path, output_path: Path) -> None:
+    df = pd.read_csv(input_path)
     missing = [source for _, source in mapping if source not in df.columns]
     if missing:
-        raise KeyError(f"Columns missing in {PATH_SA_SOURCE}: {missing}")
+        raise KeyError(f"Columns missing in {input_path}: {missing}")
 
     ordered_sources = [source for _, source in mapping]
     renamed = {source: name for name, source in mapping}
 
     selected = df[[DATE_COLUMN] + ordered_sources].rename(columns=renamed)
-    selected.to_csv(PATH_SA_OUTPUT, index=False)
+    selected.to_csv(output_path, index=False)
 
 
 def select_from_t0(mapping: List[Tuple[str, str]]) -> None:
@@ -71,9 +73,11 @@ def select_from_t0(mapping: List[Tuple[str, str]]) -> None:
 
 def main() -> None:
     mapping = load_mapping()
-    select_from_path(mapping)
+    select_from_path(mapping, PATH_SA_SOURCE, PATH_SA_OUTPUT)
+    select_from_path(mapping, PATH_BASELINE_SOURCE, PATH_BASELINE_OUTPUT)
     select_from_t0(mapping)
     print(f"Saved mapped SA path -> {PATH_SA_OUTPUT}")
+    print(f"Saved mapped baseline path -> {PATH_BASELINE_OUTPUT}")
     print(f"Saved mapped t0 -> {T0_OUTPUT}")
 
 

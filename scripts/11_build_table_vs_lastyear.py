@@ -18,7 +18,7 @@ except ImportError:
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SUMMARY_PATH = PROJECT_ROOT / "data" / "intermediate" / "shock_data.json"
-SPEC_PATH = PROJECT_ROOT / "config" / "table_specs" / "table_vs_lastyear.json"
+SPEC_PATH = PROJECT_ROOT / "config" / "table_config" / "table_vs_lastyear.json"
 
 
 def load_summary() -> Dict[str, Dict[str, Any]]:
@@ -186,7 +186,7 @@ def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
     ws.row_dimensions[1].height = 30
     
     # Save workbook
-    output_path = PROJECT_ROOT / "output" / "table_vs_lastyear.xlsx"
+    output_path = PROJECT_ROOT / "artifacts" / "table_vs_lastyear.xlsx"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output_path)
     print(f"Saved Excel -> {output_path}")
