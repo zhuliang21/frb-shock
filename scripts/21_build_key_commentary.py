@@ -14,6 +14,7 @@ Template syntax:
 - {Factor.t0}         → t0 value
 
 Format specs (e.g., :.1f, :.0f) are supported after the field name.
+Computed values are marked with `[computed]` after the value and its unit.
 """
 
 from __future__ import annotations
@@ -25,6 +26,9 @@ from typing import Any, Dict, List
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPEC_PATH = PROJECT_ROOT / "config" / "md_config" / "key_commentary.json"
+
+# Marker for computed values
+COMPUTED_MARKER = "`[computed]`"
 
 
 def load_spec() -> Dict[str, Any]:
@@ -69,22 +73,23 @@ def render_template(
     template: str,
     shock_data: Dict[str, Dict[str, Any]],
     t0_data: Dict[str, float],
+    add_marker: bool = True,
 ) -> str:
     """
     Replace placeholders like {Factor.field:.1f} with actual values.
     
-    Pattern: {Factor Name.field:format_spec}
-    - Factor Name can contain spaces and special chars
-    - field: shock, shock_abs, shock_bps, extreme, t0
-    - format_spec: optional, e.g., .1f, .0f
+    Pattern: {<factor>.<field>:<format>} or {<factor>.<field>}
+    Also captures trailing unit (%, bps, ppts) to place marker after it.
     """
-    # Pattern: {<factor>.<field>:<format>} or {<factor>.<field>}
-    pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}'
+    # Pattern: {<factor>.<field>:<format>} followed by optional unit
+    # Units: %, bps, ppts, pts
+    pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}(%|bps|ppts|pts)?'
     
     def replacer(match: re.Match) -> str:
         factor = match.group(1)
         field = match.group(2)
         fmt_spec = match.group(3) or ""
+        unit = match.group(4) or ""
         
         value = get_field_value(factor, field, shock_data, t0_data)
         
@@ -92,8 +97,13 @@ def render_template(
             return f"[{factor}.{field}:N/A]"
         
         if fmt_spec:
-            return format(value, fmt_spec)
-        return str(value)
+            formatted = format(value, fmt_spec)
+        else:
+            formatted = str(value)
+        
+        if add_marker:
+            return f"{formatted}{unit} {COMPUTED_MARKER}"
+        return f"{formatted}{unit}"
     
     return re.sub(pattern, replacer, template)
 
@@ -111,10 +121,6 @@ def build_markdown(
     lines.append(f"# {title}")
     lines.append("")
     
-    # Legend
-    lines.append("> **Legend**: `[computed]` = auto-generated from data, `[manual]` = human-authored (preserved on regeneration)")
-    lines.append("")
-    
     # Categories
     for category in spec.get("categories", []):
         lines.append(f"## {category['name']}")
@@ -125,13 +131,11 @@ def build_markdown(
             
             if bullet_type == "computed":
                 template = bullet.get("template", "")
-                text = render_template(template, shock_data, t0_data)
-                marker = "`[computed]`"
+                text = render_template(template, shock_data, t0_data, add_marker=True)
             else:
                 text = bullet.get("text", "")
-                marker = "`[manual]`"
             
-            lines.append(f"- {text}  {marker}")
+            lines.append(f"- {text}")
         
         lines.append("")
     

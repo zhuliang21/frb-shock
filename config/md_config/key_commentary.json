@@ -22,7 +22,7 @@
       "bullets": [
         {
           "type": "computed",
-          "template": "Short-term interest rates, as measured by the 3-month Treasury rate, drops to {3M Treasury.extreme:.1f}%, as 10-year Treasury yield falls {10Y Treasury.shock_bps:.0f} bps"
+          "template": "Short-term interest rates, as measured by the 3-month Treasury rate, drops to {3M Treasury.extreme:.1f}%, as 10-year Treasury yield falls {10Y Treasury.shock_bps:.0f}bps"
         },
         {
           "type": "manual",
@@ -39,7 +39,7 @@
       "bullets": [
         {
           "type": "computed",
-          "template": "BBB Corp spread widens to {BBB Corp Spread.extreme:.1f}% (+{BBB Corp Spread.shock:.1f} ppts)"
+          "template": "BBB Corp spread widens to {BBB Corp Spread.extreme:.1f}% (+{BBB Corp Spread.shock:.1f}ppts)"
         },
         {
           "type": "manual",

@@ -13,6 +13,8 @@ Template syntax:
 - {baseline.Factor.min}    → min value from baseline path
 - {baseline.Factor.first}  → first quarter value
 - {baseline.Factor.last}   → last quarter value
+
+Computed values are marked with `[computed]` after the value and its unit.
 """
 
 from __future__ import annotations
@@ -26,6 +28,9 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPEC_PATH = PROJECT_ROOT / "config" / "md_config" / "summary.json"
+
+# Marker for computed values
+COMPUTED_MARKER = "`[computed]`"
 
 
 def load_spec() -> Dict[str, Any]:
@@ -102,6 +107,7 @@ def render_template(
     shock_data: Dict[str, Dict[str, Any]],
     t0_data: Dict[str, float],
     baseline_df: pd.DataFrame,
+    add_marker: bool = True,
 ) -> str:
     """
     Replace placeholders with actual values.
@@ -109,14 +115,19 @@ def render_template(
     Patterns:
     - {Factor.field:format} for shock data
     - {baseline.Factor.agg:format} for baseline data
+    
+    Also captures trailing unit (%, bps, ppts) to place marker after it.
     """
-    # Pattern for baseline: {baseline.Factor.agg:format}
-    baseline_pattern = r'\{baseline\.([^.}]+)\.([a-z]+)(?::([^}]+))?\}'
+    marker = f" {COMPUTED_MARKER}" if add_marker else ""
+    
+    # Pattern for baseline: {baseline.Factor.agg:format} followed by optional unit
+    baseline_pattern = r'\{baseline\.([^.}]+)\.([a-z]+)(?::([^}]+))?\}(%|bps|ppts|pts)?'
     
     def baseline_replacer(match: re.Match) -> str:
         factor = match.group(1)
         agg = match.group(2)
         fmt_spec = match.group(3) or ""
+        unit = match.group(4) or ""
         
         value = get_baseline_field_value(factor, agg, baseline_df)
         
@@ -124,18 +135,22 @@ def render_template(
             return f"[baseline.{factor}.{agg}:N/A]"
         
         if fmt_spec:
-            return format(value, fmt_spec)
-        return str(value)
+            formatted = format(value, fmt_spec)
+        else:
+            formatted = str(value)
+        
+        return f"{formatted}{unit}{marker}"
     
     result = re.sub(baseline_pattern, baseline_replacer, template)
     
-    # Pattern for shock data: {Factor.field:format}
-    shock_pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}'
+    # Pattern for shock data: {Factor.field:format} followed by optional unit
+    shock_pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}(%|bps|ppts|pts)?'
     
     def shock_replacer(match: re.Match) -> str:
         factor = match.group(1)
         field = match.group(2)
         fmt_spec = match.group(3) or ""
+        unit = match.group(4) or ""
         
         value = get_shock_field_value(factor, field, shock_data, t0_data)
         
@@ -143,8 +158,11 @@ def render_template(
             return f"[{factor}.{field}:N/A]"
         
         if fmt_spec:
-            return format(value, fmt_spec)
-        return str(value)
+            formatted = format(value, fmt_spec)
+        else:
+            formatted = str(value)
+        
+        return f"{formatted}{unit}{marker}"
     
     result = re.sub(shock_pattern, shock_replacer, result)
     
@@ -171,10 +189,6 @@ def build_markdown(
     lines.append(f"On {release_date}, the FRB released the CCAR {scenario_year} Supervisory scenarios.")
     lines.append("")
     
-    # Legend
-    lines.append("> **Legend**: `[computed]` = auto-generated from data, `[manual]` = human-authored")
-    lines.append("")
-    
     # Sections
     for section in spec.get("sections", []):
         lines.append(f"## {section['name']}")
@@ -192,13 +206,11 @@ def build_markdown(
             
             if bullet_type == "computed":
                 template = bullet.get("template", "")
-                text = render_template(template, shock_data, t0_data, baseline_df)
-                marker = "`[computed]`"
+                text = render_template(template, shock_data, t0_data, baseline_df, add_marker=True)
             else:
                 text = bullet.get("text", "")
-                marker = "`[manual]`"
             
-            lines.append(f"- {text}  {marker}")
+            lines.append(f"- {text}")
         
         # Footnote (if present)
         footnote = section.get("footnote")
@@ -232,4 +244,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
