@@ -1,37 +1,31 @@
- #!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Compute shock statistics per factor and export a consolidated JSON payload.
 
 Inputs
 ------
 - config/shock_config.json : defines calculation method per factor
-- data/intermediate/path_SA.csv    : scenario path (already filtered/renamed)
-- data/intermediate/t0.json        : baseline values
+- path_SA.csv              : scenario path (already filtered/renamed)
+- t0.json                  : baseline values
 
 Output
 ------
-- data/intermediate/shock_data.json : intermediate JSON containing shock
-  values, extreme levels, t0 references, and metadata ready for downstream
-  formatting.
+- shock_data.json : intermediate JSON containing shock values, extreme levels,
+  t0 references, and metadata ready for downstream formatting.
 """
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, Literal, TypedDict
+from typing import Any, Callable, Dict, Literal, TypedDict
 
 import pandas as pd
 
+from paths import ScenarioPaths
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_PATH = PROJECT_ROOT / "config" / "shock_config.json"
-INTERMEDIATE_DIR = PROJECT_ROOT / "data" / "intermediate"
-PATH_SA_CSV = INTERMEDIATE_DIR / "path_SA.csv"
-T0_JSON_PATH = INTERMEDIATE_DIR / "t0.json"
-OUTPUT_PATH = INTERMEDIATE_DIR / "shock_data.json"
+
 DATE_COLUMN = "Date"
-
 ExtremeKind = Literal["min", "max", "range"]
 
 
@@ -41,24 +35,24 @@ class FactorConfig(TypedDict, total=False):
     shock_method: str
 
 
-def load_config() -> list[FactorConfig]:
-    config_raw = json.loads(CONFIG_PATH.read_text())
+def load_config(config_path: Path) -> list[FactorConfig]:
+    config_raw = json.loads(config_path.read_text())
     return config_raw.get("factors", [])
 
 
-def load_inputs() -> tuple[pd.DataFrame, Dict[str, Any]]:
-    df = pd.read_csv(PATH_SA_CSV)
+def load_inputs(sa_csv: Path, t0_json: Path) -> tuple[pd.DataFrame, Dict[str, Any]]:
+    df = pd.read_csv(sa_csv)
     if DATE_COLUMN not in df.columns:
-        raise KeyError(f"Column '{DATE_COLUMN}' missing in {PATH_SA_CSV}")
+        raise KeyError(f"Column '{DATE_COLUMN}' missing in {sa_csv}")
 
-    t0_payload = json.loads(T0_JSON_PATH.read_text())
+    t0_payload = json.loads(t0_json.read_text())
     t0_factors: Dict[str, Any] = t0_payload.get("factors", {})
     return df, t0_factors
 
 
 def numeric_series(df: pd.DataFrame, column: str) -> pd.Series:
     if column not in df.columns:
-        raise KeyError(f"Column '{column}' missing in {PATH_SA_CSV}")
+        raise KeyError(f"Column '{column}' missing in DataFrame")
     return pd.to_numeric(df[column], errors="coerce")
 
 
@@ -149,7 +143,6 @@ def compute_factor_result(
 
     if method == "rate_range":
         calc_result = calculator(series=series)
-        t0_value = None
     else:
         t0_value = t0_factors.get(config["name"])
         calc_result = calculator(
@@ -162,17 +155,19 @@ def compute_factor_result(
 
 
 def main() -> None:
-    configs = load_config()
-    df, t0_factors = load_inputs()
+    paths = ScenarioPaths()
+    
+    configs = load_config(paths.shock_config_path)
+    df, t0_factors = load_inputs(paths.path_sa_csv, paths.t0_json)
 
     summary: Dict[str, Any] = {}
     for cfg in configs:
         summary[cfg["name"]] = compute_factor_result(df, t0_factors, cfg)
 
-    OUTPUT_PATH.write_text(json.dumps(summary, indent=2))
-    print(f"Shock summary written to {OUTPUT_PATH}")
+    output_path = paths.shock_data_json
+    output_path.write_text(json.dumps(summary, indent=2))
+    print(f"Shock summary written to {output_path}")
 
 
 if __name__ == "__main__":
     main()
-

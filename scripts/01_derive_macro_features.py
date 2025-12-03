@@ -6,7 +6,7 @@ Derive additional macro variables for downstream shock analysis.
    (annualized percentages). Baseline level = 100 at t0.
 2. Compute BBB and mortgage spreads versus the 10-year Treasury yield.
 3. Insert the derived metrics immediately after their source columns in both
-   `data/intermediate/path_SA.csv` and `data/intermediate/t0.json`.
+   `path_SA_source.csv` and `t0_source.json`.
 """
 
 from __future__ import annotations
@@ -17,12 +17,8 @@ from typing import Dict, Iterable
 
 import pandas as pd
 
+from paths import ScenarioPaths
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-INTERMEDIATE_DIR = PROJECT_ROOT / "data" / "intermediate"
-PATH_SA_SOURCE = INTERMEDIATE_DIR / "path_SA_source.csv"
-PATH_BASELINE_SOURCE = INTERMEDIATE_DIR / "path_baseline_source.csv"
-T0_JSON_SOURCE = INTERMEDIATE_DIR / "t0_source.json"
 
 DATE_COLUMN = "Date"
 REAL_GDP_GROWTH = "Real GDP growth"
@@ -40,12 +36,6 @@ GDP_GROWTH_TO_LEVEL = {
     "Euro area real GDP growth": "Euro area GDP level (index)",
     "Japan real GDP growth": "Japan GDP level (index)",
 }
-
-
-def ensure_inputs() -> None:
-    for path in (PATH_SA_SOURCE, PATH_BASELINE_SOURCE, T0_JSON_SOURCE):
-        if not path.exists():
-            raise FileNotFoundError(f"Required file missing: {path}")
 
 
 def quarter_sort_key(series: pd.Series) -> pd.Series:
@@ -97,6 +87,9 @@ def insert_column_after(df: pd.DataFrame, anchor: str, column: str, values: Iter
 
 
 def update_path_source(csv_path: Path) -> None:
+    if not csv_path.exists():
+        return
+        
     df = pd.read_csv(csv_path)
     df = sort_by_date(df)
 
@@ -132,8 +125,8 @@ def insert_key_after(mapping: Dict[str, float | None], anchor: str, key: str, va
     return result
 
 
-def update_t0_source() -> None:
-    payload = json.loads(T0_JSON_SOURCE.read_text())
+def update_t0_source(t0_path: Path) -> None:
+    payload = json.loads(t0_path.read_text())
     factors: Dict[str, float] = payload["factors"]
 
     for growth_col, level_col in GDP_GROWTH_TO_LEVEL.items():
@@ -150,17 +143,25 @@ def update_t0_source() -> None:
     factors = insert_key_after(factors, MORTGAGE_RATE, MORTGAGE_SPREAD, mortgage_spread_value)
 
     payload["factors"] = factors
-    T0_JSON_SOURCE.write_text(json.dumps(payload, indent=2))
+    t0_path.write_text(json.dumps(payload, indent=2))
 
 
 def main() -> None:
-    ensure_inputs()
-    update_path_source(PATH_SA_SOURCE)
-    update_path_source(PATH_BASELINE_SOURCE)
-    update_t0_source()
-    print("Derived macro features saved to path_SA_source.csv, path_baseline_source.csv, and t0_source.json")
+    paths = ScenarioPaths()
+    
+    sa_source = paths.intermediate_dir / "path_SA_source.csv"
+    baseline_source = paths.intermediate_dir / "path_baseline_source.csv"
+    t0_source = paths.intermediate_dir / "t0_source.json"
+    
+    for path in (sa_source, t0_source):
+        if not path.exists():
+            raise FileNotFoundError(f"Required file missing: {path}")
+    
+    update_path_source(sa_source)
+    update_path_source(baseline_source)
+    update_t0_source(t0_source)
+    print("Derived macro features saved.")
 
 
 if __name__ == "__main__":
     main()
-

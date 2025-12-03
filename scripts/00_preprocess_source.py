@@ -12,42 +12,47 @@ Steps
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Iterable, List, Tuple
 
 import pandas as pd
 
+from paths import ScenarioPaths
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = PROJECT_ROOT / "data"
-SOURCE_DIR = DATA_DIR / "source"
-INTERMEDIATE_DIR = DATA_DIR / "intermediate"
 
 DATE_COLUMN = "Date"
 SCENARIO_COLUMN = "Scenario Name"
 
-HISTORIC_FILES = {
-    "domestic": SOURCE_DIR / "2025-Table_1A_Historic_Domestic.csv",
-    "international": SOURCE_DIR / "2025-Table_1B_Historic_International.csv",
-}
 
-SA_FILES = {
-    "domestic": SOURCE_DIR / "2025-Table_3A_Supervisory_Severely_Adverse_Domestic.csv",
-    "international": SOURCE_DIR / "2025-Table_3B_Supervisory_Severely_Adverse_International.csv",
-}
-
-BASELINE_FILES = {
-    "domestic": SOURCE_DIR / "2025-Table_2A_Supervisory_Baseline_Domestic.csv",
-    "international": SOURCE_DIR / "2025-Table_2B_Supervisory_Baseline_International.csv",
-}
-
-T0_JSON_PATH = INTERMEDIATE_DIR / "t0_source.json"
-SA_PATH_CSV = INTERMEDIATE_DIR / "path_SA_source.csv"
-BASELINE_PATH_CSV = INTERMEDIATE_DIR / "path_baseline_source.csv"
-
-
-def ensure_intermediate_dir() -> None:
-    INTERMEDIATE_DIR.mkdir(parents=True, exist_ok=True)
+def get_source_files(paths: ScenarioPaths) -> Tuple[Dict[str, Path], Dict[str, Path], Dict[str, Path]]:
+    """Discover source files based on naming convention."""
+    source_dir = paths.source_dir
+    
+    # Find files by pattern
+    historic_files: Dict[str, Path] = {}
+    sa_files: Dict[str, Path] = {}
+    baseline_files: Dict[str, Path] = {}
+    
+    for csv_file in source_dir.glob("*.csv"):
+        name = csv_file.name.lower()
+        if "historic" in name:
+            if "domestic" in name:
+                historic_files["domestic"] = csv_file
+            elif "international" in name:
+                historic_files["international"] = csv_file
+        elif "severely_adverse" in name or "severely-adverse" in name:
+            if "domestic" in name:
+                sa_files["domestic"] = csv_file
+            elif "international" in name:
+                sa_files["international"] = csv_file
+        elif "baseline" in name:
+            if "domestic" in name:
+                baseline_files["domestic"] = csv_file
+            elif "international" in name:
+                baseline_files["international"] = csv_file
+    
+    return historic_files, sa_files, baseline_files
 
 
 def _quarter_sort_key(dates: pd.Series) -> pd.Series:
@@ -85,16 +90,15 @@ def extract_t0(df: pd.DataFrame) -> Tuple[str, Dict[str, float | None]]:
     return t0_date, factors
 
 
-def build_t0_payload() -> Dict[str, object]:
+def build_t0_payload(historic_files: Dict[str, Path]) -> Dict[str, object]:
     combined_factors: Dict[str, float | None] = {}
-    t0_dates: list[str] = []
+    t0_dates: List[str] = []
 
-    for region, csv_path in HISTORIC_FILES.items():
+    for region, csv_path in historic_files.items():
         df = pd.read_csv(csv_path)
         t0_date, factors = extract_t0(df)
         t0_dates.append(t0_date)
 
-        # Factor names already encode the region (e.g., "Euro area ..."), so we can merge directly.
         for name, value in factors.items():
             if name in combined_factors:
                 raise ValueError(f"Duplicate factor name '{name}' found while merging {region}.")
@@ -119,8 +123,8 @@ def _numeric_columns(df: pd.DataFrame, ignore: Iterable[str]) -> pd.DataFrame:
 
 
 def build_scenario_path(file_map: Dict[str, Path]) -> pd.DataFrame:
-    dataframes: list[pd.DataFrame] = []
-    column_order: list[str] = [DATE_COLUMN]
+    dataframes: List[pd.DataFrame] = []
+    column_order: List[str] = [DATE_COLUMN]
 
     for csv_path in file_map.values():
         df = pd.read_csv(csv_path)
@@ -146,22 +150,34 @@ def build_scenario_path(file_map: Dict[str, Path]) -> pd.DataFrame:
 
 
 def main() -> None:
-    ensure_intermediate_dir()
+    paths = ScenarioPaths()
+    paths.ensure_dirs()
+    
+    historic_files, sa_files, baseline_files = get_source_files(paths)
+    
+    if not historic_files:
+        raise FileNotFoundError(f"No historic files found in {paths.source_dir}")
+    if not sa_files:
+        raise FileNotFoundError(f"No SA files found in {paths.source_dir}")
 
-    t0_payload = build_t0_payload()
-    T0_JSON_PATH.write_text(json.dumps(t0_payload, indent=2))
+    t0_json_path = paths.intermediate_dir / "t0_source.json"
+    sa_path_csv = paths.intermediate_dir / "path_SA_source.csv"
+    baseline_path_csv = paths.intermediate_dir / "path_baseline_source.csv"
 
-    sa_path_df = build_scenario_path(SA_FILES)
-    sa_path_df.to_csv(SA_PATH_CSV, index=False)
+    t0_payload = build_t0_payload(historic_files)
+    t0_json_path.write_text(json.dumps(t0_payload, indent=2))
 
-    baseline_path_df = build_scenario_path(BASELINE_FILES)
-    baseline_path_df.to_csv(BASELINE_PATH_CSV, index=False)
+    sa_path_df = build_scenario_path(sa_files)
+    sa_path_df.to_csv(sa_path_csv, index=False)
 
-    print(f"Saved t0 json -> {T0_JSON_PATH}")
-    print(f"Saved SA path csv -> {SA_PATH_CSV}")
-    print(f"Saved Baseline path csv -> {BASELINE_PATH_CSV}")
+    if baseline_files:
+        baseline_path_df = build_scenario_path(baseline_files)
+        baseline_path_df.to_csv(baseline_path_csv, index=False)
+        print(f"Saved Baseline path csv -> {baseline_path_csv}")
+
+    print(f"Saved t0 json -> {t0_json_path}")
+    print(f"Saved SA path csv -> {sa_path_csv}")
 
 
 if __name__ == "__main__":
     main()
-

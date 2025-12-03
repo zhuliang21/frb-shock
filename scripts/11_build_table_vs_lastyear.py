@@ -6,6 +6,7 @@ Build the current-vs-last-year table from shock_data.json and export to Excel.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -16,17 +17,16 @@ try:
 except ImportError:
     OPENPYXL_AVAILABLE = False
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SUMMARY_PATH = PROJECT_ROOT / "data" / "intermediate" / "shock_data.json"
-SPEC_PATH = PROJECT_ROOT / "config" / "table_config" / "table_vs_lastyear.json"
+from paths import ScenarioPaths
 
 
-def load_summary() -> Dict[str, Dict[str, Any]]:
-    return json.loads(SUMMARY_PATH.read_text())
+def load_summary(paths: ScenarioPaths) -> Dict[str, Dict[str, Any]]:
+    return json.loads(paths.shock_data_json.read_text())
 
 
-def load_spec() -> Dict[str, Any]:
-    return json.loads(SPEC_PATH.read_text())
+def load_spec(paths: ScenarioPaths) -> Dict[str, Any]:
+    spec_path = paths.table_config_dir / "table_vs_lastyear.json"
+    return json.loads(spec_path.read_text())
 
 
 def base_context(entry: Dict[str, Any]) -> Dict[str, Any]:
@@ -61,9 +61,9 @@ def render_value(entry: Dict[str, Any], spec: Dict[str, Any]) -> str:
     return template.format(**ctx)
 
 
-def build_table() -> Dict[str, Any]:
-    summary = load_summary()
-    spec = load_spec()
+def build_table(paths: ScenarioPaths) -> Dict[str, Any]:
+    summary = load_summary(paths)
+    spec = load_spec(paths)
     columns = spec["columns"]
     factor_order: List[str] = spec["order"]
 
@@ -74,45 +74,35 @@ def build_table() -> Dict[str, Any]:
 
     for factor in factor_order:
         entry = summary[factor]
-        # Copy the original data
         result[factor] = entry.copy()
         
-        # Find the display template for this factor
         value_spec = next(v for v in value_column["values"] if v["source"] == factor)
-        # Add the display field
         result[factor]["display"] = render_value(entry, value_spec)
 
     return result
 
 
-def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
+def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
     """Export comparison table to Excel with styling."""
     if not OPENPYXL_AVAILABLE:
         print("Warning: openpyxl not installed. Skipping Excel export.")
-        print("Install with: pip install openpyxl")
         return
     
-    # Load history data
-    history_path = PROJECT_ROOT / "data" / "history" / "table_vs_lastyear.json"
+    history_path = paths.history_dir / "table_vs_lastyear.json"
     if not history_path.exists():
         print(f"Warning: History file not found at {history_path}")
         return
     
     history_data = json.loads(history_path.read_text())
     
-    # Get scenario names
     current_scenario = list(current_data.keys())[0]
     history_scenarios = sorted(history_data.keys())
-    
-    # Get factor order
     factor_order: List[str] = spec["order"]
     
-    # Create workbook
     wb = Workbook()
     ws = wb.active
     ws.title = "Comparison"
     
-    # Define styles
     header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
     header_font = Font(name="Inter", color="FFFFFF", bold=True, size=12)
     header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
@@ -126,11 +116,7 @@ def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
         bottom=Side(style="thin", color="000000")
     )
     
-    # Build headers with line breaks
     def format_scenario_name(name: str) -> str:
-        """Add line break between year and scenario type."""
-        # Example: "CCAR 2024 (Severely Adverse)" -> "CCAR 2024\n(Severely Adverse)"
-        import re
         match = re.match(r'(CCAR \d{4})\s+(\(.+\))', name)
         if match:
             return f"{match.group(1)}\n{match.group(2)}"
@@ -138,7 +124,6 @@ def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
     
     headers = ["Factor"] + [format_scenario_name(s) for s in history_scenarios] + [format_scenario_name(current_scenario)]
     
-    # Write headers
     for col_idx, header in enumerate(headers, start=1):
         cell = ws.cell(row=1, column=col_idx, value=header)
         cell.fill = header_fill
@@ -146,15 +131,12 @@ def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
         cell.alignment = header_alignment
         cell.border = border
     
-    # Write data rows
     for row_idx, factor in enumerate(factor_order, start=2):
-        # Factor name
         cell = ws.cell(row=row_idx, column=1, value=factor)
         cell.font = cell_font
         cell.alignment = cell_alignment
         cell.border = border
         
-        # History columns
         col_idx = 2
         for scenario in history_scenarios:
             if factor in history_data[scenario]:
@@ -167,7 +149,6 @@ def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
             cell.border = border
             col_idx += 1
         
-        # Current column
         if factor in current_data[current_scenario]:
             display_value = current_data[current_scenario][factor].get("display", "")
         else:
@@ -177,37 +158,32 @@ def export_to_excel(current_data: Dict[str, Any], spec: Dict[str, Any]) -> None:
         cell.alignment = cell_alignment
         cell.border = border
     
-    # Set column widths
     ws.column_dimensions['A'].width = 20
     for col_idx in range(2, len(headers) + 1):
         ws.column_dimensions[chr(64 + col_idx)].width = 18
     
-    # Set row height for header
     ws.row_dimensions[1].height = 30
     
-    # Save workbook
-    output_path = PROJECT_ROOT / "artifacts" / "table_vs_lastyear.xlsx"
+    output_path = paths.artifacts_dir / "table_vs_lastyear.xlsx"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(output_path)
     print(f"Saved Excel -> {output_path}")
 
 
 def main() -> None:
-    spec = load_spec()
-    table = build_table()
+    paths = ScenarioPaths()
+    spec = load_spec(paths)
+    table = build_table(paths)
     
-    # Wrap table with scenario name
     scenario_name = spec.get("scenario_name", "Unknown Scenario")
     output = {scenario_name: table}
     
-    output_path = PROJECT_ROOT / spec["output_path"]
+    output_path = paths.current_dir / "table_vs_lastyear.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(output, indent=2))
     print(f"Saved JSON -> {output_path}")
-    print(f"Scenario: {scenario_name}")
     
-    # Export to Excel
-    export_to_excel(output, spec)
+    export_to_excel(paths, output, spec)
 
 
 if __name__ == "__main__":

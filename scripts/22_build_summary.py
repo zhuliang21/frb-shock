@@ -21,33 +21,32 @@ from __future__ import annotations
 
 import json
 import re
-from pathlib import Path
 from typing import Any, Dict, List
 
 import pandas as pd
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SPEC_PATH = PROJECT_ROOT / "config" / "md_config" / "summary.json"
+from paths import ScenarioPaths
+
 
 # Marker for computed values
 COMPUTED_MARKER = "`[computed]`"
 
 
-def load_spec() -> Dict[str, Any]:
-    return json.loads(SPEC_PATH.read_text())
+def load_spec(paths: ScenarioPaths) -> Dict[str, Any]:
+    return json.loads(paths.summary_config.read_text())
 
 
-def load_shock_data(path: Path) -> Dict[str, Dict[str, Any]]:
-    return json.loads(path.read_text())
+def load_shock_data(paths: ScenarioPaths) -> Dict[str, Dict[str, Any]]:
+    return json.loads(paths.shock_data_json.read_text())
 
 
-def load_t0_data(path: Path) -> Dict[str, float]:
-    data = json.loads(path.read_text())
+def load_t0_data(paths: ScenarioPaths) -> Dict[str, float]:
+    data = json.loads(paths.t0_json.read_text())
     return data.get("factors", {})
 
 
-def load_baseline_data(path: Path) -> pd.DataFrame:
-    return pd.read_csv(path)
+def load_baseline_data(paths: ScenarioPaths) -> pd.DataFrame:
+    return pd.read_csv(paths.path_baseline_csv)
 
 
 def get_shock_field_value(
@@ -111,16 +110,10 @@ def render_template(
 ) -> str:
     """
     Replace placeholders with actual values.
-    
-    Patterns:
-    - {Factor.field:format} for shock data
-    - {baseline.Factor.agg:format} for baseline data
-    
     Also captures trailing unit (%, bps, ppts) to place marker after it.
     """
     marker = f" {COMPUTED_MARKER}" if add_marker else ""
     
-    # Pattern for baseline: {baseline.Factor.agg:format} followed by optional unit
     baseline_pattern = r'\{baseline\.([^.}]+)\.([a-z]+)(?::([^}]+))?\}(%|bps|ppts|pts)?'
     
     def baseline_replacer(match: re.Match) -> str:
@@ -143,7 +136,6 @@ def render_template(
     
     result = re.sub(baseline_pattern, baseline_replacer, template)
     
-    # Pattern for shock data: {Factor.field:format} followed by optional unit
     shock_pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}(%|bps|ppts|pts)?'
     
     def shock_replacer(match: re.Match) -> str:
@@ -178,29 +170,24 @@ def build_markdown(
     """Build the markdown output."""
     lines: List[str] = []
     
-    # Title
     title = spec.get("title", "Summary")
     lines.append(f"# {title}")
     lines.append("")
     
-    # Release info
     release_date = spec.get("release_date", "")
     scenario_year = spec.get("scenario_year", "")
     lines.append(f"On {release_date}, the FRB released the CCAR {scenario_year} Supervisory scenarios.")
     lines.append("")
     
-    # Sections
     for section in spec.get("sections", []):
         lines.append(f"## {section['name']}")
         lines.append("")
         
-        # Section description (italic if present)
         description = section.get("description")
         if description:
             lines.append(f"*{description}*")
             lines.append("")
         
-        # Bullets
         for bullet in section.get("bullets", []):
             bullet_type = bullet.get("type", "manual")
             
@@ -212,7 +199,6 @@ def build_markdown(
             
             lines.append(f"- {text}")
         
-        # Footnote (if present)
         footnote = section.get("footnote")
         if footnote:
             lines.append("")
@@ -224,19 +210,16 @@ def build_markdown(
 
 
 def main() -> None:
-    spec = load_spec()
+    paths = ScenarioPaths()
+    spec = load_spec(paths)
     
-    shock_data_path = PROJECT_ROOT / spec["shock_data_path"]
-    t0_path = PROJECT_ROOT / spec["t0_path"]
-    baseline_path = PROJECT_ROOT / spec["baseline_path"]
-    output_path = PROJECT_ROOT / spec["output_path"]
-    
-    shock_data = load_shock_data(shock_data_path)
-    t0_data = load_t0_data(t0_path)
-    baseline_df = load_baseline_data(baseline_path)
+    shock_data = load_shock_data(paths)
+    t0_data = load_t0_data(paths)
+    baseline_df = load_baseline_data(paths)
     
     markdown = build_markdown(spec, shock_data, t0_data, baseline_df)
     
+    output_path = paths.summary_md
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(markdown)
     print(f"Saved → {output_path}")

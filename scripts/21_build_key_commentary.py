@@ -21,26 +21,25 @@ from __future__ import annotations
 
 import json
 import re
-from pathlib import Path
 from typing import Any, Dict, List
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SPEC_PATH = PROJECT_ROOT / "config" / "md_config" / "key_commentary.json"
+from paths import ScenarioPaths
+
 
 # Marker for computed values
 COMPUTED_MARKER = "`[computed]`"
 
 
-def load_spec() -> Dict[str, Any]:
-    return json.loads(SPEC_PATH.read_text())
+def load_spec(paths: ScenarioPaths) -> Dict[str, Any]:
+    return json.loads(paths.key_commentary_config.read_text())
 
 
-def load_shock_data(path: Path) -> Dict[str, Dict[str, Any]]:
-    return json.loads(path.read_text())
+def load_shock_data(paths: ScenarioPaths) -> Dict[str, Dict[str, Any]]:
+    return json.loads(paths.shock_data_json.read_text())
 
 
-def load_t0_data(path: Path) -> Dict[str, float]:
-    data = json.loads(path.read_text())
+def load_t0_data(paths: ScenarioPaths) -> Dict[str, float]:
+    data = json.loads(paths.t0_json.read_text())
     return data.get("factors", {})
 
 
@@ -77,12 +76,8 @@ def render_template(
 ) -> str:
     """
     Replace placeholders like {Factor.field:.1f} with actual values.
-    
-    Pattern: {<factor>.<field>:<format>} or {<factor>.<field>}
     Also captures trailing unit (%, bps, ppts) to place marker after it.
     """
-    # Pattern: {<factor>.<field>:<format>} followed by optional unit
-    # Units: %, bps, ppts, pts
     pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}(%|bps|ppts|pts)?'
     
     def replacer(match: re.Match) -> str:
@@ -116,12 +111,10 @@ def build_markdown(
     """Build the markdown output."""
     lines: List[str] = []
     
-    # Title
     title = spec.get("title", "Key Factor Shocks")
     lines.append(f"# {title}")
     lines.append("")
     
-    # Categories
     for category in spec.get("categories", []):
         lines.append(f"## {category['name']}")
         lines.append("")
@@ -143,17 +136,15 @@ def build_markdown(
 
 
 def main() -> None:
-    spec = load_spec()
+    paths = ScenarioPaths()
+    spec = load_spec(paths)
     
-    shock_data_path = PROJECT_ROOT / spec["shock_data_path"]
-    t0_path = PROJECT_ROOT / spec["t0_path"]
-    output_path = PROJECT_ROOT / spec["output_path"]
-    
-    shock_data = load_shock_data(shock_data_path)
-    t0_data = load_t0_data(t0_path)
+    shock_data = load_shock_data(paths)
+    t0_data = load_t0_data(paths)
     
     markdown = build_markdown(spec, shock_data, t0_data)
     
+    output_path = paths.key_commentary_md
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(markdown)
     print(f"Saved → {output_path}")
