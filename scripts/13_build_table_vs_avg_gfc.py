@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Any, Dict
 
 try:
-    from openpyxl import Workbook
-    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl import Workbook  # type: ignore[import-untyped]
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side  # type: ignore[import-untyped]
     OPENPYXL_AVAILABLE = True
 except ImportError:
     OPENPYXL_AVAILABLE = False
@@ -111,7 +111,8 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
         bottom=Side(style="dashed", color="CCCCCC"),
     )
     
-    headers = ["", "Factor", "CCAR 2025 (SA)", "CCAR Avg.\n(2019-2025)", "GFC Shock", 
+    scenario_name = spec.get("scenario_name", "CCAR 2025 (SA)")
+    headers = ["", "Factor", scenario_name, "CCAR Avg.\n(2019-2025)", "GFC Shock", 
                 "Relative to CCAR\nAvg", "Relative to GFC"]
     
     for col_idx, header in enumerate(headers, start=1):

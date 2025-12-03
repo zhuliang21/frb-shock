@@ -1,0 +1,39 @@
+{
+  "ccar_avg": {
+    "Real GDP": -6.5,
+    "Unemployment": 5.1,
+    "US Equities": -51.0,
+    "VIX": 37.0,
+    "3M Treasury": -210.0,
+    "5Y Treasury": -200.0,
+    "10Y Treasury": -190.0,
+    "BBB Corp Spread": 390.0,
+    "US HPI": -30.0,
+    "US CRE": -36.0,
+    "UK GDP": -4.5,
+    "Eurozone GDP": -4.9,
+    "Japan GDP": -6.8,
+    "USD/EUR": -8.5,
+    "USD/GBP": -7.7,
+    "JPY/USD": -3.8
+  },
+  "gfc": {
+    "Real GDP": -4.0,
+    "Unemployment": 5.5,
+    "US Equities": -48.0,
+    "VIX": 62.0,
+    "3M Treasury": -480.0,
+    "5Y Treasury": -310.0,
+    "10Y Treasury": -200.0,
+    "BBB Corp Spread": 440.0,
+    "US HPI": -29.0,
+    "US CRE": -38.0,
+    "UK GDP": -6.3,
+    "Eurozone GDP": -5.7,
+    "Japan GDP": -8.7,
+    "USD/EUR": -10.3,
+    "USD/GBP": -16.9,
+    "JPY/USD": -10.9
+  }
+}
+

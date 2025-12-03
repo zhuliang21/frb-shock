@@ -1,0 +1,58 @@
+{
+  "scenario_name": "CCAR 2026 Proposed (Severely Adverse)",
+  "output_path": "data/current/table_vs_lastyear.json",
+  "columns": [
+    {
+      "header": "Factor",
+      "source": "factor"
+    },
+    {
+      "header": "Value",
+      "values": [
+        { "source": "Real GDP", "template": "{shock:.1f}%" },
+        { "source": "Unemployment", "template": "{extreme:.0f}% max\n({delta:+.1f} ppts)", "delta_scale": 1 },
+        { "source": "US Inflation", "template": "{high:.1f}% to {low:.1f}%" },
+        { "source": "US Equities", "template": "{shock:.1f}%" },
+        { "source": "VIX", "template": "{extreme:.0f} peak\n({delta:+.0f} pts)", "delta_scale": 1 },
+        { "source": "3M Treasury", "template": "{extreme:.1f}% trough\n({delta:+.0f} bps)", "delta_scale": 100 },
+        { "source": "5Y Treasury", "template": "{extreme:.1f}% trough\n({delta:+.0f} bps)", "delta_scale": 100 },
+        { "source": "10Y Treasury", "template": "{extreme:.1f}% trough\n({delta:+.0f} bps)", "delta_scale": 100 },
+        { "source": "Mortgage Spread", "template": "{extreme:.1f}% peak\n({delta:+.0f} bps)", "delta_scale": 100 },
+        { "source": "BBB Corp Spread", "template": "{extreme:.1f}% peak\n({delta:+.0f} bps)", "delta_scale": 100 },
+        { "source": "US HPI", "template": "{shock:.1f}%" },
+        { "source": "US CRE", "template": "{shock:.1f}%" },
+        { "source": "Dev. Asia GDP", "template": "{shock:.1f}%" },
+        { "source": "UK GDP", "template": "{shock:.1f}%" },
+        { "source": "Eurozone GDP", "template": "{shock:.1f}%" },
+        { "source": "Japan GDP", "template": "{shock:.1f}%" },
+        { "source": "USD/EUR", "template": "{shock:.1f}%" },
+        { "source": "USD/GBP", "template": "{shock:.1f}%" },
+        { "source": "JPY/USD", "template": "{shock:.1f}%" },
+        { "source": "D.A./USD", "template": "{shock:.1f}%" }
+      ]
+    }
+  ],
+  "order": [
+    "Real GDP",
+    "Unemployment",
+    "US Inflation",
+    "US Equities",
+    "VIX",
+    "3M Treasury",
+    "5Y Treasury",
+    "10Y Treasury",
+    "Mortgage Spread",
+    "BBB Corp Spread",
+    "US HPI",
+    "US CRE",
+    "Dev. Asia GDP",
+    "UK GDP",
+    "Eurozone GDP",
+    "Japan GDP",
+    "USD/EUR",
+    "USD/GBP",
+    "JPY/USD",
+    "D.A./USD"
+  ]
+}
+

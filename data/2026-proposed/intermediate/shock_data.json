@@ -1,0 +1,88 @@
+{
+  "Real GDP": {
+    "extreme_value": 95.1833,
+    "shock_value": -4.8166999999999955
+  },
+  "Unemployment": {
+    "extreme_value": 10.0,
+    "shock_value": 5.5
+  },
+  "US Inflation": {
+    "extreme_value": {
+      "min": 1.1,
+      "max": 2.9
+    },
+    "shock_value": {
+      "min": 1.1,
+      "max": 2.9
+    }
+  },
+  "US Equities": {
+    "extreme_value": 29052.6,
+    "shock_value": -53.547724841668675
+  },
+  "VIX": {
+    "extreme_value": 72.0,
+    "shock_value": 48.8
+  },
+  "3M Treasury": {
+    "extreme_value": 0.1,
+    "shock_value": -3.9
+  },
+  "5Y Treasury": {
+    "extreme_value": 1.3,
+    "shock_value": -2.5
+  },
+  "10Y Treasury": {
+    "extreme_value": 2.3,
+    "shock_value": -2.0
+  },
+  "Mortgage Spread": {
+    "extreme_value": 3.4,
+    "shock_value": 1.2999999999999998
+  },
+  "BBB Corp Spread": {
+    "extreme_value": 5.7,
+    "shock_value": 4.4
+  },
+  "US HPI": {
+    "extreme_value": 225.0,
+    "shock_value": -28.548745633534445
+  },
+  "US CRE": {
+    "extreme_value": 186.7,
+    "shock_value": -39.98714239794279
+  },
+  "Dev. Asia GDP": {
+    "extreme_value": 100.1497,
+    "shock_value": 0.14969999999998596
+  },
+  "UK GDP": {
+    "extreme_value": 93.9224,
+    "shock_value": -6.077600000000006
+  },
+  "Eurozone GDP": {
+    "extreme_value": 94.0989,
+    "shock_value": -5.901100000000003
+  },
+  "Japan GDP": {
+    "extreme_value": 93.7789,
+    "shock_value": -6.221100000000002
+  },
+  "USD/EUR": {
+    "extreme_value": 1.016,
+    "shock_value": -13.013698630136982
+  },
+  "USD/GBP": {
+    "extreme_value": 1.173,
+    "shock_value": -13.046701260192728
+  },
+  "JPY/USD": {
+    "extreme_value": 141.5,
+    "shock_value": -0.9797060881735487
+  },
+  "D.A./USD": {
+    "extreme_value": 123.3,
+    "shock_value": 15.018656716417912
+  }
+}

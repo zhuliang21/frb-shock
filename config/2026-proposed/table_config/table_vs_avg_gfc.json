@@ -1,0 +1,152 @@
+{
+  "scenario_name": "CCAR 2026 Proposed (SA)",
+  "output_path": "data/current/table_vs_avg_gfc.json",
+  "factor_groups": [
+    {
+      "group": "US Macro",
+      "factors": [
+        {
+          "name": "Real GDP",
+          "source": "Real GDP",
+          "template": "{value:.1f}%"
+        },
+        {
+          "name": "Unemployment",
+          "source": "Unemployment",
+          "template": "{value:+.1f} ppts"
+        }
+      ]
+    },
+    {
+      "group": "Equities",
+      "factors": [
+        {
+          "name": "US Equities",
+          "source": "US Equities",
+          "template": "{value:.0f}%"
+        },
+        {
+          "name": "VIX",
+          "source": "VIX",
+          "template": "{value:+.0f} pts"
+        }
+      ]
+    },
+    {
+      "group": "Interest Rates",
+      "factors": [
+        {
+          "name": "3M Treasury",
+          "source": "3M Treasury",
+          "template": "{value:.0f} bps"
+        },
+        {
+          "name": "5Y Treasury",
+          "source": "5Y Treasury",
+          "template": "{value:.0f} bps"
+        },
+        {
+          "name": "10Y Treasury",
+          "source": "10Y Treasury",
+          "template": "{value:.0f} bps"
+        }
+      ]
+    },
+    {
+      "group": "Corp Credit",
+      "factors": [
+        {
+          "name": "BBB Corp Spread",
+          "source": "BBB Corp Spread",
+          "template": "{value:+.0f} bps"
+        }
+      ]
+    },
+    {
+      "group": "Real Estate",
+      "factors": [
+        {
+          "name": "US HPI",
+          "source": "US HPI",
+          "template": "{value:.0f}%"
+        },
+        {
+          "name": "US CRE",
+          "source": "US CRE",
+          "template": "{value:.0f}%"
+        }
+      ]
+    },
+    {
+      "group": "Non-US Macro",
+      "factors": [
+        {
+          "name": "UK GDP",
+          "source": "UK GDP",
+          "template": "{value:.1f}%"
+        },
+        {
+          "name": "Eurozone GDP",
+          "source": "Eurozone GDP",
+          "template": "{value:.1f}%"
+        },
+        {
+          "name": "Japan GDP",
+          "source": "Japan GDP",
+          "template": "{value:.1f}%"
+        }
+      ]
+    },
+    {
+      "group": "FX",
+      "factors": [
+        {
+          "name": "USD/EUR",
+          "source": "USD/EUR",
+          "template": "{value:.1f}%"
+        },
+        {
+          "name": "USD/GBP",
+          "source": "USD/GBP",
+          "template": "{value:.1f}%"
+        },
+        {
+          "name": "JPY/USD",
+          "source": "JPY/USD",
+          "template": "{value:.1f}%"
+        }
+      ]
+    }
+  ],
+  "comparison_columns": [
+    {
+      "name": "CCAR 2026 Proposed (SA)",
+      "source": "current"
+    },
+    {
+      "name": "CCAR Avg.\n(2019-2025)",
+      "source": "ccar_avg"
+    },
+    {
+      "name": "GFC Shock",
+      "source": "gfc"
+    }
+  ],
+  "heatmap_columns": [
+    {
+      "name": "Relative to CCAR\nAvg",
+      "compare_to": "ccar_avg",
+      "color_scale": "green_red"
+    },
+    {
+      "name": "Relative to GFC",
+      "compare_to": "gfc",
+      "color_scale": "green_red"
+    }
+  ],
+  "heatmap_colors": {
+    "green": "8BC34A",
+    "red": "D32F2F"
+  }
+}
+

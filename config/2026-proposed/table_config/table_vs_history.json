@@ -1,0 +1,157 @@
+{
+  "scenario_name": "CCAR 2026 Proposed FRB SA",
+  "output_path": "data/current/table_vs_history.json",
+  "columns": [
+    {
+      "header": "Scenario",
+      "source": "scenario"
+    },
+    {
+      "header": "3M Treasury",
+      "source": "3M Treasury",
+      "unit": "Pct Points",
+      "symbol": "Δ",
+      "template": "{shock:.1f}"
+    },
+    {
+      "header": "5Y Treasury",
+      "source": "5Y Treasury",
+      "unit": "Pct Points",
+      "symbol": "Δ",
+      "template": "{shock:.1f}"
+    },
+    {
+      "header": "10Y Treasury",
+      "source": "10Y Treasury",
+      "unit": "Pct Points",
+      "symbol": "Δ",
+      "template": "{shock:.1f}"
+    },
+    {
+      "header": "BBB Corp Spread",
+      "source": "BBB Corp Spread",
+      "unit": "Pct Points",
+      "symbol": "Δ",
+      "template": "{shock:.1f}"
+    },
+    {
+      "header": "VIX",
+      "source": "VIX",
+      "unit": "Points",
+      "symbol": "Δ",
+      "template": "{shock:.1f}"
+    },
+    {
+      "header": "US Equities",
+      "source": "US Equities",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "Unemployment",
+      "source": "Unemployment",
+      "unit": "Pct Points",
+      "symbol": "Δ",
+      "template": "{shock:.1f}"
+    },
+    {
+      "header": "Real GDP",
+      "source": "Real GDP",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "US HPI",
+      "source": "US HPI",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "US CRE",
+      "source": "US CRE",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "UK GDP",
+      "source": "UK GDP",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "Eurozone GDP",
+      "source": "Eurozone GDP",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "Japan GDP",
+      "source": "Japan GDP",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "Dev.Asia GDP",
+      "source": "Dev. Asia GDP",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "USD/EUR",
+      "source": "USD/EUR",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "USD/GBP",
+      "source": "USD/GBP",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "JPY/USD",
+      "source": "JPY/USD",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    },
+    {
+      "header": "D.A./USD",
+      "source": "D.A./USD",
+      "unit": "Percent",
+      "symbol": "%Δ",
+      "template": "{shock:.1f}%"
+    }
+  ],
+  "factor_order": [
+    "3M Treasury",
+    "5Y Treasury",
+    "10Y Treasury",
+    "BBB Corp Spread",
+    "VIX",
+    "US Equities",
+    "Unemployment",
+    "Real GDP",
+    "US HPI",
+    "US CRE",
+    "UK GDP",
+    "Eurozone GDP",
+    "Japan GDP",
+    "Dev. Asia GDP",
+    "USD/EUR",
+    "USD/GBP",
+    "JPY/USD",
+    "D.A./USD"
+  ]
+}
+
