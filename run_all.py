@@ -27,6 +27,7 @@ SCRIPT_SEQUENCE: List[str] = [
     "12_build_table_vs_history.py",
     "13_build_table_vs_avg_gfc.py",
     "21_build_key_commentary.py",
+    "22_build_summary.py",
 ]
 
 

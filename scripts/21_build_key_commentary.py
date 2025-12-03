@@ -1,124 +1,159 @@
 #!/usr/bin/env python3
 """
-Generate Markdown commentary comparing current CCAR shocks vs prior year using
-pre-built table outputs. Configuration for factor grouping and paths lives in
-config/md_config/key_commentary.json.
+Generate Key Factor Commentary for PPT slides.
+
+Supports two bullet types:
+- computed: Template with placeholders like {Factor.shock:.1f} auto-filled from data
+- manual: Static text preserved as-is for human review
+
+Template syntax:
+- {Factor.shock}      → shock_value
+- {Factor.shock_abs}  → abs(shock_value)
+- {Factor.shock_bps}  → abs(shock_value) * 100 (for basis points)
+- {Factor.extreme}    → extreme_value
+- {Factor.t0}         → t0 value
+
+Format specs (e.g., :.1f, :.0f) are supported after the field name.
 """
 
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPEC_PATH = PROJECT_ROOT / "config" / "md_config" / "key_commentary.json"
 
 
 def load_spec() -> Dict[str, Any]:
-    spec = json.loads(SPEC_PATH.read_text())
-
-    def resolve(path_str: str) -> Path:
-        return PROJECT_ROOT / path_str
-
-    spec["current_table_path"] = resolve(spec["current_table_path"])
-    spec["history_table_path"] = resolve(spec["history_table_path"])
-    spec["output_md_path"] = resolve(spec["output_md_path"])
-
-    categories: List[Dict[str, Any]] = []
-    for category in spec.get("categories", []):
-        factors = []
-        for factor in category.get("factors", []):
-            if isinstance(factor, str):
-                factors.append({"key": factor})
-            else:
-                factors.append(
-                    {
-                        "key": factor["key"],
-                        "note": factor.get("note"),
-                    }
-                )
-        categories.append({"name": category["name"], "factors": factors})
-    spec["categories"] = categories
-    return spec
+    return json.loads(SPEC_PATH.read_text())
 
 
-def load_table(path: Path) -> Tuple[str, Dict[str, Dict[str, Any]]]:
+def load_shock_data(path: Path) -> Dict[str, Dict[str, Any]]:
+    return json.loads(path.read_text())
+
+
+def load_t0_data(path: Path) -> Dict[str, float]:
     data = json.loads(path.read_text())
-    if not data:
-        raise ValueError(f"No data found in {path}")
-    scenario, factors = next(iter(data.items()))
-    return scenario, factors
+    return data.get("factors", {})
 
 
-def normalise_display(entry: Dict[str, Any]) -> str:
-    display = entry.get("display")
-    if display:
-        return display.replace("\n", "<br>").replace("|", "\\|")
-    shock = entry.get("shock_value")
-    if shock is None:
-        return "n/a"
-    return f"{shock:.2f}"
+def get_field_value(
+    factor: str,
+    field: str,
+    shock_data: Dict[str, Dict[str, Any]],
+    t0_data: Dict[str, float],
+) -> float | None:
+    """Extract a field value for a given factor."""
+    entry = shock_data.get(factor, {})
+    
+    if field == "shock":
+        return entry.get("shock_value")
+    elif field == "shock_abs":
+        val = entry.get("shock_value")
+        return abs(val) if val is not None else None
+    elif field == "shock_bps":
+        val = entry.get("shock_value")
+        return abs(val) * 100 if val is not None else None
+    elif field == "extreme":
+        return entry.get("extreme_value")
+    elif field == "t0":
+        return t0_data.get(factor)
+    
+    return None
 
 
-def build_category_markdown(
-    category: Dict[str, Any],
-    current_factors: Dict[str, Dict[str, Any]],
-    history_factors: Dict[str, Dict[str, Any]],
-    current_label: str,
-    history_label: str,
-) -> List[str]:
+def render_template(
+    template: str,
+    shock_data: Dict[str, Dict[str, Any]],
+    t0_data: Dict[str, float],
+) -> str:
+    """
+    Replace placeholders like {Factor.field:.1f} with actual values.
+    
+    Pattern: {Factor Name.field:format_spec}
+    - Factor Name can contain spaces and special chars
+    - field: shock, shock_abs, shock_bps, extreme, t0
+    - format_spec: optional, e.g., .1f, .0f
+    """
+    # Pattern: {<factor>.<field>:<format>} or {<factor>.<field>}
+    pattern = r'\{([^.}]+)\.([a-z_]+)(?::([^}]+))?\}'
+    
+    def replacer(match: re.Match) -> str:
+        factor = match.group(1)
+        field = match.group(2)
+        fmt_spec = match.group(3) or ""
+        
+        value = get_field_value(factor, field, shock_data, t0_data)
+        
+        if value is None:
+            return f"[{factor}.{field}:N/A]"
+        
+        if fmt_spec:
+            return format(value, fmt_spec)
+        return str(value)
+    
+    return re.sub(pattern, replacer, template)
+
+
+def build_markdown(
+    spec: Dict[str, Any],
+    shock_data: Dict[str, Dict[str, Any]],
+    t0_data: Dict[str, float],
+) -> str:
+    """Build the markdown output."""
     lines: List[str] = []
-    lines.append(f"## {category['name']}\n")
-    lines.append(f"| Factor | {current_label} | {history_label} |")
-    lines.append("| --- | --- | --- |")
-
-    for factor in category["factors"]:
-        key = factor["key"]
-        cur_entry = current_factors.get(key, {})
-        hist_entry = history_factors.get(key, {})
-        lines.append(
-            f"| {key} | {normalise_display(cur_entry)} | {normalise_display(hist_entry)} |"
-        )
-
-    note_lines = [
-        factor.get("note") for factor in category["factors"] if factor.get("note")
-    ]
-    if note_lines:
-        lines.append("\n> " + " ".join(f"[{note}]" for note in note_lines))
-
+    
+    # Title
+    title = spec.get("title", "Key Factor Shocks")
+    lines.append(f"# {title}")
     lines.append("")
-    return lines
+    
+    # Legend
+    lines.append("> **Legend**: `[computed]` = auto-generated from data, `[manual]` = human-authored (preserved on regeneration)")
+    lines.append("")
+    
+    # Categories
+    for category in spec.get("categories", []):
+        lines.append(f"## {category['name']}")
+        lines.append("")
+        
+        for bullet in category.get("bullets", []):
+            bullet_type = bullet.get("type", "manual")
+            
+            if bullet_type == "computed":
+                template = bullet.get("template", "")
+                text = render_template(template, shock_data, t0_data)
+                marker = "`[computed]`"
+            else:
+                text = bullet.get("text", "")
+                marker = "`[manual]`"
+            
+            lines.append(f"- {text}  {marker}")
+        
+        lines.append("")
+    
+    return "\n".join(lines)
 
 
 def main() -> None:
     spec = load_spec()
-    current_label, current_factors = load_table(spec["current_table_path"])
-    history_label, history_factors = load_table(spec["history_table_path"])
-
-    markdown_lines: List[str] = [
-        "# Supervisory Severely Adverse Scenario: Key Factor Commentary",
-        "",
-        f"Current scenario: **{current_label}**  •  Prior scenario: **{history_label}**",
-        "",
-        "> Tables below are sourced from the auto-generated `table_vs_lastyear.json` files. "
-        "Annotate or rewrite the copy beneath each section as needed.",
-        "",
-    ]
-
-    for category in spec["categories"]:
-        markdown_lines.extend(
-            build_category_markdown(
-                category, current_factors, history_factors, current_label, history_label
-            )
-        )
-
-    output_path: Path = spec["output_md_path"]
+    
+    shock_data_path = PROJECT_ROOT / spec["shock_data_path"]
+    t0_path = PROJECT_ROOT / spec["t0_path"]
+    output_path = PROJECT_ROOT / spec["output_path"]
+    
+    shock_data = load_shock_data(shock_data_path)
+    t0_data = load_t0_data(t0_path)
+    
+    markdown = build_markdown(spec, shock_data, t0_data)
+    
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text("\n".join(markdown_lines))
-    print(f"Saved Markdown -> {output_path}")
+    output_path.write_text(markdown)
+    print(f"Saved → {output_path}")
 
 
 if __name__ == "__main__":
     main()
-

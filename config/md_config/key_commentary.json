@@ -1,63 +1,99 @@
 {
-  "current_table_path": "data/current/table_vs_lastyear.json",
-  "history_table_path": "data/history/table_vs_lastyear.json",
-  "output_md_path": "artifacts/key_commentary.md",
+  "title": "Supervisory Severely Adverse Scenario: Key Factor Shocks",
+  "shock_data_path": "data/intermediate/shock_data.json",
+  "t0_path": "data/intermediate/t0.json",
+  "output_path": "artifacts/key_commentary.md",
   "categories": [
     {
       "name": "US real GDP and Unemployment",
-      "factors": [
-        "Real GDP",
+      "bullets": [
         {
-          "key": "Unemployment",
-          "note": "Counter-cyclicality element in FRB's Scenario Design Framework."
+          "type": "computed",
+          "template": "{Real GDP.shock_abs:.1f}% real GDP contraction less than CCAR 2024"
+        },
+        {
+          "type": "manual",
+          "text": "Smaller increase in the unemployment rate reflects the counter-cyclicality element in FRB's Scenario Design Framework"
         }
       ]
     },
     {
       "name": "Interest Rates",
-      "factors": [
-        "3M Treasury",
-        "5Y Treasury",
-        "10Y Treasury"
+      "bullets": [
+        {
+          "type": "computed",
+          "template": "Short-term interest rates, as measured by the 3-month Treasury rate, drops to {3M Treasury.extreme:.1f}%, as 10-year Treasury yield falls {10Y Treasury.shock_bps:.0f} bps"
+        },
+        {
+          "type": "manual",
+          "text": "Less downward rate compared with CCAR 2024, but the term spread (10Y-3M) is similar"
+        },
+        {
+          "type": "manual",
+          "text": "Treasury yield curve remains inverted for 2025Q1, but then slope turns positive and steepens as CCAR 2024"
+        }
       ]
     },
     {
       "name": "Credit spreads",
-      "factors": [
-        "BBB Corp Spread"
+      "bullets": [
+        {
+          "type": "computed",
+          "template": "BBB Corp spread widens to {BBB Corp Spread.extreme:.1f}% (+{BBB Corp Spread.shock:.1f} ppts)"
+        },
+        {
+          "type": "manual",
+          "text": "This is a less severe shock than CCAR 2024, reflecting smaller spillover effect from less severe stress in commercial real estate markets"
+        }
       ]
     },
     {
       "name": "Equity prices and volatility",
-      "factors": [
-        "US Equities",
-        "VIX"
+      "bullets": [
+        {
+          "type": "computed",
+          "template": "{US Equities.shock:.0f}%; smaller shock than CCAR 2024"
+        },
+        {
+          "type": "computed",
+          "template": "Peak VIX is {VIX.extreme:.0f}, less than CCAR 2024, but from a higher starting point"
+        }
       ]
     },
     {
       "name": "Property Prices",
-      "factors": [
-        "US HPI",
-        "US CRE"
+      "bullets": [
+        {
+          "type": "manual",
+          "text": "CRE and HPI shock less to CCAR 2024, reflecting the counter-cyclicality element in FRB's Scenario Design Framework"
+        }
       ]
     },
     {
       "name": "FX Rates",
-      "factors": [
-        "USD/EUR",
-        "USD/GBP",
-        "JPY/USD",
-        "D.A./USD"
+      "bullets": [
+        {
+          "type": "manual",
+          "text": "Flight-to-safety asset flows cause USD to appreciate vs euro, pound and Dev. Asia currencies, but depreciate vs yen."
+        },
+        {
+          "type": "manual",
+          "text": "Larger EUR, GBP, and Dev. Asia FX depreciations, and larger JPY appreciation, relative to CCAR 2024"
+        }
       ]
     },
     {
       "name": "Non-US GDP",
-      "factors": [
-        "UK GDP",
-        "Eurozone GDP",
-        "Japan GDP"
+      "bullets": [
+        {
+          "type": "manual",
+          "text": "Emphasis on growth shocks to advanced foreign economies (UK, Eurozone, Japan)"
+        },
+        {
+          "type": "manual",
+          "text": "Less severe recessions in UK, Japan and Developing Asia compared to CCAR 2024, Eurozone has the same recession as CCAR 2024"
+        }
       ]
     }
   ]
 }
-
