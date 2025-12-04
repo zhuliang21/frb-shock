@@ -29,7 +29,7 @@
         },
         {
           "type": "manual",
-          "text": "Japan's real GDP growth will be positive, though sluggish, through the forecast horizon. Inflation in Japan fluctuates around 2% through the forecast horizon"
+          "text": "Japan's real GDP growth will be positive, though sluggish, through the forecast horizon. Inflation in Japan fluctuates around 2.2% through the forecast horizon"
         }
       ]
     },
@@ -51,7 +51,7 @@
         },
         {
           "type": "computed",
-          "template": "Smaller equity shock ({US Equities.shock:.0f}% vs -55%) and lower VIX peak ({VIX.extreme:.0f} vs 70)"
+          "template": "Larger equity shock ({US Equities.shock:.0f}% vs -50%) and higher VIX peak ({VIX.extreme:.0f} vs 65)"
         },
         {
           "type": "manual",
@@ -63,7 +63,7 @@
         },
         {
           "type": "computed",
-          "template": "Less severe corporate credit spread shock ({BBB Corp Spread.extreme:.1f}% vs 5.8% peak)"
+          "template": "More severe corporate credit spread shock ({BBB Corp Spread.extreme:.1f}% vs 5.0% peak)"
         }
       ]
     },

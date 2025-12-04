@@ -14,23 +14,23 @@
 ## Credit spreads
 
 - BBB Corp spread widens to 5.7% `[computed]` (+4.4ppts `[computed]`)
-- This is a less severe shock than CCAR 2025, reflecting smaller spillover effect from less severe stress in commercial real estate markets
+- This is a more severe shock than CCAR 2025, reflecting larger spillover effect from more severe stress in commercial real estate markets
 
 ## Equity prices and volatility
 
-- -54% `[computed]`; smaller shock than CCAR 2025
-- Peak VIX is 72 `[computed]`, less than CCAR 2025, but from a higher starting point
+- -54% `[computed]`; larger shock than CCAR 2025
+- Peak VIX is 72 `[computed]`, higher than CCAR 2025, from a higher starting point
 
 ## Property Prices
 
-- CRE and HPI shock less to CCAR 2025, reflecting the counter-cyclicality element in FRB's Scenario Design Framework
+- HPI shock less than CCAR 2025, but CRE shock is more severe, reflecting the counter-cyclicality element in FRB's Scenario Design Framework
 
 ## FX Rates
 
 - Flight-to-safety asset flows cause USD to appreciate vs euro, pound and Dev. Asia currencies, but depreciate vs yen.
-- Larger EUR, GBP, and Dev. Asia FX depreciations, and larger JPY appreciation, relative to CCAR 2025
+- Larger EUR, GBP, and Dev. Asia FX depreciations, but smaller JPY appreciation, relative to CCAR 2025
 
 ## Non-US GDP
 
 - Emphasis on growth shocks to advanced foreign economies (UK, Eurozone, Japan)
-- Less severe recessions in UK, Japan and Developing Asia compared to CCAR 2025, Eurozone has the same recession as CCAR 2025
+- More severe recessions in UK and Eurozone compared to CCAR 2025, but less severe in Japan and Developing Asia

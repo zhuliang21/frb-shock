@@ -1,23 +1,23 @@
-## frb-shock
+# frb-shock
 
-Data-processing pipeline that reads FRB scenario CSVs, normalizes them, derives extra metrics, and exports ready-to-use shock summaries plus presentation-ready tables.
+Data pipeline for FRB CCAR scenario analysis. Reads source CSVs, computes shocks, and generates presentation-ready tables and commentary.
 
-### Layout
+## Usage
 
-- `scripts/`  
-  - `00_preprocess_source.py` – unify source tables and produce `data/intermediate/*_source.*`.  
-  - `01_derive_macro_features.py` – add indexed GDP levels + spreads.  
-  - `02_select_factors.py` – pick published factors via `config/factor_mapping.json`.  
-  - `10_compute_shocks.py` – compute shocks using `config/shock_config.json`, emit `data/intermediate/shock_data.json`.  
-  - `11_build_table_vs_lastyear.py` – build current-year vs prior-year summaries + Excel (`artifacts/table_vs_lastyear.xlsx`).  
-  - `12_build_table_vs_history.py` – build multi-year comparison table + Excel (`artifacts/table_vs_history.xlsx`).  
-  - `13_build_table_vs_avg_gfc.py` – build CCAR vs Avg vs GFC table with heatmap (`artifacts/table_vs_avg_gfc.xlsx`).  
-  - `21_build_key_commentary.py` – emit Markdown summaries that pair each factor group with a current-vs-prior table (`artifacts/key_commentary.md`).
-- `config/` – mapping and formatting configs (`table_config/` for numeric tables, `md_config/` for Markdown outputs, plus factor/shock mappings).
-- `data/`  
-  - `source/` – raw FRB CSVs.  
-  - `intermediate/` – pipeline outputs (`shock_data.json` is the main feed into the table scripts).  
-  - `history/` – frozen historical snapshots that back the comparison columns.  
-  - `current/` – latest JSON outputs per table (regenerated when running the scripts).
-- `artifacts/` – final Excel tables and Markdown commentary.
-- `docs/` – supporting notes/specs.
+```bash
+python run_all.py --scenario 2025           # run full pipeline for 2025
+python run_all.py --scenario 2026-proposed  # run for 2026 proposed
+```
+
+## Layout
+
+```
+config/         # factor mappings, shock configs, table/md templates
+data/
+  ├── source/       # raw FRB CSVs
+  ├── intermediate/ # pipeline outputs (shock_data.json, paths, t0)
+  ├── history/      # frozen historical data for comparisons
+  └── current/      # latest JSON outputs per table
+artifacts/      # final Excel tables and Markdown commentary
+scripts/        # processing scripts (00-22)
+```

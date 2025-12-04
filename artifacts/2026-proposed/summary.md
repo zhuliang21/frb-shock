@@ -8,7 +8,7 @@ On Monday, December 01, the FRB released the CCAR 2026 Proposed Supervisory scen
 - US inflation moderates, allowing the FRB to cut short-term interest rates. 10-year Treasury yield falls to 3.9% `[computed]`
 - Equity prices are flat at 2025Q4 levels and property prices grow moderately
 - Real GDP growth improves to a moderate pace in the UK and Eurozone. Eurozone inflation is stable while inflation in the UK starts declines gradually in later 2026
-- Japan's real GDP growth will be positive, though sluggish, through the forecast horizon. Inflation in Japan fluctuates around 2% through the forecast horizon
+- Japan's real GDP growth will be positive, though sluggish, through the forecast horizon. Inflation in Japan fluctuates around 2.2% through the forecast horizon
 
 ## Severely Adverse
 
@@ -17,10 +17,10 @@ On Monday, December 01, the FRB released the CCAR 2026 Proposed Supervisory scen
 - US recession resembles CCAR 2025 (slightly milder real GDP shock and same unemployment rate peak)
 - Smaller decline in HPI reflecting lower ratio of house price to income in 2025
 - Smaller decline in CRE reflecting already weakened CRE sector
-- Smaller equity shock (-54% `[computed]` vs -55%) and lower VIX peak (72 `[computed]` vs 70)
+- Larger equity shock (-54% `[computed]` vs -50%) and higher VIX peak (72 `[computed]` vs 65)
 - Smaller downward rate shock due to lower starting point and higher trough
 - Yield curve is inverted in 1Q'26 and then steepens over the remainder of the scenario
-- Less severe corporate credit spread shock (5.7% `[computed]` vs 5.8% peak)
+- More severe corporate credit spread shock (5.7% `[computed]` vs 5.0% peak)
 
 ## Exploratory Analysis
 
