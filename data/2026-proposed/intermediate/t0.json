@@ -1,8 +1,8 @@
 {
   "date": "2025 Q4",
   "factors": {
-    "Real GDP": 100.0,
-    "Unemployment": 4.5,
+    "US Real GDP": 100.0,
+    "US Unemployment": 4.5,
     "US Inflation": 3.4,
     "US Equities": 62542.9,
     "VIX": 23.2,

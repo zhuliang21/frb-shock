@@ -170,6 +170,9 @@ def build_markdown(
     """Build the markdown output."""
     lines: List[str] = []
     
+    # Check if computed marker should be shown (default: False)
+    show_marker = spec.get("show_computed_marker", False)
+    
     title = spec.get("title", "Summary")
     lines.append(f"# {title}")
     lines.append("")
@@ -189,11 +192,9 @@ def build_markdown(
             lines.append("")
         
         for bullet in section.get("bullets", []):
-            bullet_type = bullet.get("type", "manual")
-            
-            if bullet_type == "computed":
-                template = bullet.get("template", "")
-                text = render_template(template, shock_data, t0_data, baseline_df, add_marker=True)
+            # Auto-detect type: if template exists, it's computed; otherwise use text
+            if "template" in bullet:
+                text = render_template(bullet["template"], shock_data, t0_data, baseline_df, add_marker=show_marker)
             else:
                 text = bullet.get("text", "")
             

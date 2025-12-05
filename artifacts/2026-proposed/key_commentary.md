@@ -2,24 +2,24 @@
 
 ## US real GDP and Unemployment
 
-- 4.8% `[computed]` real GDP contraction less than CCAR 2025
+- 4.8% real GDP contraction less than CCAR 2025
 - Smaller increase in the unemployment rate reflects the counter-cyclicality element in FRB's Scenario Design Framework
 
 ## Interest Rates
 
-- Short-term interest rates, as measured by the 3-month Treasury rate, drops to 0.1% `[computed]`, as 10-year Treasury yield falls 200bps `[computed]`
+- Short-term interest rates, as measured by the 3-month Treasury rate, drops to 0.1%, as 10-year Treasury yield falls 200bps
 - Less downward rate compared with CCAR 2025, but the term spread (10Y-3M) is similar
 - Treasury yield curve remains inverted for 2026Q1, but then slope turns positive and steepens as CCAR 2025
 
 ## Credit spreads
 
-- BBB Corp spread widens to 5.7% `[computed]` (+4.4ppts `[computed]`)
+- BBB Corp spread widens to 5.7% (+4.4ppts)
 - This is a more severe shock than CCAR 2025, reflecting larger spillover effect from more severe stress in commercial real estate markets
 
 ## Equity prices and volatility
 
-- -54% `[computed]`; larger shock than CCAR 2025
-- Peak VIX is 72 `[computed]`, higher than CCAR 2025, from a higher starting point
+- -54%; larger shock than CCAR 2025
+- Peak VIX is 72, higher than CCAR 2025, from a higher starting point
 
 ## Property Prices
 

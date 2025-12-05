@@ -1,11 +1,11 @@
 {
   "CCAR 2025 (Severely Adverse)": {
-    "Real GDP": {
+    "US Real GDP": {
       "extreme_value": 92.1982,
       "shock_value": -7.801800000000004,
       "display": "-7.8%"
     },
-    "Unemployment": {
+    "US Unemployment": {
       "extreme_value": 10.0,
       "shock_value": 5.9,
       "display": "10% max\n(+5.9 ppts)"

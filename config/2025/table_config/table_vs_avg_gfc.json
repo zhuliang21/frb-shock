@@ -6,13 +6,13 @@
       "group": "US Macro",
       "factors": [
         {
-          "name": "Real GDP",
-          "source": "Real GDP",
+          "name": "US Real GDP",
+          "source": "US Real GDP",
           "template": "{value:.1f}%"
         },
         {
-          "name": "Unemployment",
-          "source": "Unemployment",
+          "name": "US Unemployment",
+          "source": "US Unemployment",
           "template": "{value:+.1f} ppts"
         }
       ]

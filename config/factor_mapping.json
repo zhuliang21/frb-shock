@@ -1,11 +1,11 @@
 {
   "factors": [
     {
-      "name": "Real GDP",
+      "name": "US Real GDP",
       "source_column": "Real GDP level (index)"
     },
     {
-      "name": "Unemployment",
+      "name": "US Unemployment",
       "source_column": "Unemployment rate"
     },
     {

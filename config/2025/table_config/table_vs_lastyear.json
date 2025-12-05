@@ -9,8 +9,8 @@
     {
       "header": "Value",
       "values": [
-        { "source": "Real GDP", "template": "{shock:.1f}%" },
-        { "source": "Unemployment", "template": "{extreme:.0f}% max\n({delta:+.1f} ppts)", "delta_scale": 1 },
+        { "source": "US Real GDP", "template": "{shock:.1f}%" },
+        { "source": "US Unemployment", "template": "{extreme:.0f}% max\n({delta:+.1f} ppts)", "delta_scale": 1 },
         { "source": "US Inflation", "template": "{high:.1f}% to {low:.1f}%" },
         { "source": "US Equities", "template": "{shock:.1f}%" },
         { "source": "VIX", "template": "{extreme:.0f} peak\n({delta:+.0f} pts)", "delta_scale": 1 },
@@ -33,8 +33,8 @@
     }
   ],
   "order": [
-    "Real GDP",
-    "Unemployment",
+    "US Real GDP",
+    "US Unemployment",
     "US Inflation",
     "US Equities",
     "VIX",

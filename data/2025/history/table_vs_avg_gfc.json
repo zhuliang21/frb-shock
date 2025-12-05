@@ -1,7 +1,7 @@
 {
   "ccar_avg": {
-    "Real GDP": -6.5,
-    "Unemployment": 5.1,
+    "US Real GDP": -6.5,
+    "US Unemployment": 5.1,
     "US Equities": -51.0,
     "VIX": 37.0,
     "3M Treasury": -210.0,
@@ -18,8 +18,8 @@
     "JPY/USD": -3.8
   },
   "gfc": {
-    "Real GDP": -4.0,
-    "Unemployment": 5.5,
+    "US Real GDP": -4.0,
+    "US Unemployment": 5.5,
     "US Equities": -48.0,
     "VIX": 62.0,
     "3M Treasury": -480.0,

@@ -1,9 +1,9 @@
 {
-  "Real GDP": {
+  "US Real GDP": {
     "extreme_value": 95.1833,
     "shock_value": -4.8166999999999955
   },
-  "Unemployment": {
+  "US Unemployment": {
     "extreme_value": 10.0,
     "shock_value": 5.5
   },

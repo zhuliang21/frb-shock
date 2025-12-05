@@ -1,11 +1,11 @@
 {
   "CCAR 2026 Proposed (Severely Adverse)": {
-    "Real GDP": {
+    "US Real GDP": {
       "extreme_value": 95.1833,
       "shock_value": -4.8166999999999955,
       "display": "-4.8%"
     },
-    "Unemployment": {
+    "US Unemployment": {
       "extreme_value": 10.0,
       "shock_value": 5.5,
       "display": "10% max\n(+5.5 ppts)"

@@ -1,12 +1,12 @@
 {
   "factors": [
     {
-      "name": "Real GDP",
+      "name": "US Real GDP",
       "extreme": "min",
       "shock_method": "level_pct_vs_t0"
     },
     {
-      "name": "Unemployment",
+      "name": "US Unemployment",
       "extreme": "max",
       "shock_method": "level_delta_vs_t0"
     },

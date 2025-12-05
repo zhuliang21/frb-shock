@@ -1,8 +1,8 @@
 {
   "date": "2024 Q4",
   "factors": {
-    "Real GDP": 100.0,
-    "Unemployment": 4.1,
+    "US Real GDP": 100.0,
+    "US Unemployment": 4.1,
     "US Inflation": 2.7,
     "US Equities": 58399.3,
     "VIX": 27.6,

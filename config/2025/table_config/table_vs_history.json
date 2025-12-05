@@ -49,15 +49,15 @@
       "template": "{shock:.1f}%"
     },
     {
-      "header": "Unemployment",
-      "source": "Unemployment",
+      "header": "US Unemployment",
+      "source": "US Unemployment",
       "unit": "Pct Points",
       "symbol": "Δ",
       "template": "{shock:.1f}"
     },
     {
-      "header": "Real GDP",
-      "source": "Real GDP",
+      "header": "US Real GDP",
+      "source": "US Real GDP",
       "unit": "Percent",
       "symbol": "%Δ",
       "template": "{shock:.1f}%"
@@ -140,8 +140,8 @@
     "BBB Corp Spread",
     "VIX",
     "US Equities",
-    "Unemployment",
-    "Real GDP",
+    "US Unemployment",
+    "US Real GDP",
     "US HPI",
     "US CRE",
     "UK GDP",
