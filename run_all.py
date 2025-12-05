@@ -30,6 +30,7 @@ SCRIPT_SEQUENCE: List[str] = [
     "13_build_table_vs_avg_gfc.py",
     "21_build_key_commentary.py",
     "22_build_summary.py",
+    "23_build_timeline.py",
 ]
 
 DEFAULT_SCENARIO = "2025"
@@ -67,9 +68,9 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--scenario", "-s",
+        "--year", "-y",
         default=DEFAULT_SCENARIO,
-        help=f"Scenario identifier (default: {DEFAULT_SCENARIO}). Examples: 2025, 2026-proposed, 2026-formal",
+        help=f"Year/scenario identifier (default: {DEFAULT_SCENARIO}). Examples: 2025, 2026-proposed, 2026-formal",
     )
     parser.add_argument(
         "scripts",
@@ -83,7 +84,7 @@ def main(argv: Iterable[str] | None = None) -> None:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    scenario = args.scenario
+    scenario = args.year
     print(f"Processing scenario: {scenario}")
 
     scripts_to_run = validate_scripts(args.scripts)

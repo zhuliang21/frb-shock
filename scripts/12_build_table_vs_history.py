@@ -72,11 +72,11 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
     ws = wb.active
     ws.title = "Historical Comparison"
     
-    header_fill = PatternFill(start_color="1F2937", end_color="1F2937", fill_type="solid")
+    header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
     header_font = Font(name="Inter", color="FFFFFF", bold=True, size=11)
     header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
     
-    unit_fill = PatternFill(start_color="1F2937", end_color="1F2937", fill_type="solid")
+    unit_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
     unit_font = Font(name="Inter", color="FFFFFF", size=9)
     unit_alignment = Alignment(horizontal="center", vertical="center")
     
@@ -107,12 +107,10 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
     )
     
     headers = ["Scenario"]
-    symbols = [""]
     units = [""]
     
     for col_spec in columns_spec[1:]:
         headers.append(col_spec.get("header", col_spec["source"]))
-        symbols.append(col_spec.get("symbol", ""))
         units.append(col_spec.get("unit", ""))
     
     for col_idx, header in enumerate(headers, start=1):
@@ -127,20 +125,8 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
         else:
             cell.border = border
     
-    for col_idx, symbol in enumerate(symbols, start=1):
-        cell = ws.cell(row=2, column=col_idx, value=symbol)
-        cell.fill = unit_fill
-        cell.font = unit_font
-        cell.alignment = unit_alignment
-        if col_idx == 1:
-            cell.border = border_left
-        elif col_idx == len(symbols):
-            cell.border = border_right
-        else:
-            cell.border = border
-    
     for col_idx, unit in enumerate(units, start=1):
-        cell = ws.cell(row=3, column=col_idx, value=unit)
+        cell = ws.cell(row=2, column=col_idx, value=unit)
         cell.fill = unit_fill
         cell.font = unit_font
         cell.alignment = unit_alignment
@@ -168,7 +154,7 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
     if "Financial Crisis Historical" in history_data:
         ordered_scenarios.append("Financial Crisis Historical")
     
-    row_idx = 4
+    row_idx = 3
     for scenario_name in ordered_scenarios:
         is_bold_row = (
             "Average" in scenario_name or 
@@ -227,7 +213,6 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
     
     ws.row_dimensions[1].height = 30
     ws.row_dimensions[2].height = 20
-    ws.row_dimensions[3].height = 20
     
     output_path = paths.artifacts_dir / "table_vs_history.xlsx"
     output_path.parent.mkdir(parents=True, exist_ok=True)

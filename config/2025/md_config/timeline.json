@@ -1,0 +1,28 @@
+{
+  "title": "Timeline",
+  "release_date": "2025-02-05",
+  "output_path": "artifacts/timeline.md",
+  "intro_bullets": [
+    "CMAO scenario team is working to create an expanded data set of macro factors for each scenario (Baseline, Severely Adverse) applying the FRB's 28 macro factors and qualitative guidance material",
+    "There will be no separate macro scenario publication for the exploratory analysis since the macro assumptions are identical to the severely adverse scenario."
+  ],
+  "milestones": [
+    {
+      "day_offset": 3,
+      "description": "Preliminary scenarios (Baseline and Severely Adverse) will be available in CME by **{date}**"
+    },
+    {
+      "day_offset": 5,
+      "description": "R&C feedback is due **{date}**"
+    },
+    {
+      "day_offset": 9,
+      "description": "Model owners will sign attestation forms for Tier I factors by **{date} (EOD)**"
+    },
+    {
+      "day_offset": 9,
+      "description": "Scenarios finalized and approved for release in CME at Stress Testing SteerCo on **{date}**"
+    }
+  ]
+}
+

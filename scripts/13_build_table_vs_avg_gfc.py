@@ -84,7 +84,7 @@ def export_to_excel(paths: ScenarioPaths, current_data: Dict[str, Any], spec: Di
     ws = wb.active
     ws.title = "Avg GFC Comparison"
     
-    header_fill = PatternFill(start_color="1F2937", end_color="1F2937", fill_type="solid")
+    header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
     header_font = Font(name="Inter", color="FFFFFF", bold=True, size=11)
     header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
     
